@@ -1,0 +1,32 @@
+{
+  "name": "mobx-sync",
+  "version": "0.0.1",
+  "description": "A library to persist your mobx stores.",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/acrazing/mobx-sync.git"
+  },
+  "keywords": [
+    "mobx",
+    "persist",
+    "sync",
+    "localStorage"
+  ],
+  "author": "acrazing",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/acrazing/mobx-sync/issues"
+  },
+  "homepage": "https://github.com/acrazing/mobx-sync#readme",
+  "dependencies": {
+    "mobx": "^3.3.2",
+    "tslib": "^1.8.0"
+  },
+  "devDependencies": {
+    "known-types": "^1.2.0"
+  }
+}
