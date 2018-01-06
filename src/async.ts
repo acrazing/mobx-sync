@@ -9,7 +9,9 @@
  */
 
 import { autorun, autorunAsync, IReactionDisposer } from 'mobx'
-import { __KEY__, __NAME__, parseCycle, parseStore } from './utils'
+import { __KEY__, __NAME__ } from './constants'
+import { parseCycle } from './parse-cycle'
+import { parseStore } from './parse-store'
 
 export interface AsyncStorage {
   getItem(key: string): Promise<string | null>;
@@ -32,10 +34,12 @@ export class AsyncTrunk {
   private sync: boolean
   private delay: number
 
-  constructor(
-    store: any,
-    { storage = localStorage, storageKey = __KEY__, sync = false, delay = 0 }: AsyncTrunkOptions = {},
-  ) {
+  constructor(store: any, {
+    storage = localStorage,
+    storageKey = __KEY__,
+    sync = false,
+    delay = 0,
+  }: AsyncTrunkOptions = {}) {
     this.store = store
     this.storage = storage
     this.storageKey = storageKey
@@ -48,7 +52,7 @@ export class AsyncTrunk {
       await this.storage.setItem(this.storageKey, JSON.stringify(this.store))
     } catch {
       // TODO report error
-      console.error('cycle reference occured', parseCycle(this.store))
+      console.error('cycle reference occurred', parseCycle(this.store))
     }
   }
 

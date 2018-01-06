@@ -14,12 +14,35 @@ A library to persist your mobx stores.
 - var yarn: `yarn add mobx-sync`
 - var npm: `npm install mobx --save`
 
+## Change Log
+
+### 0.1.0
+
+- Add version control for a field: you can use `@version` decorator to specify the version of the field, if the version is different for a field, the stored value will be ignored, for example:
+    ```typescript
+    // In first version of your application, you created a node with one field `id`, and did not specify the version
+    // of the field. Then persist it.
+    class Node {
+      id = 1
+    }
+  
+    // In current version, you need to update the data structure of the field `id`, just like change the type from
+    // `number` to `string`, and then you can add a version decorator for the field like follow:
+    import { version } from './src/version'
+    class NewNode {
+      @version(1)
+      id = '1'
+    }
+  
+    // And then, the data persisted that `id=1` will be ignored, after load, the value of the `id` will be `'1'`
+    ```
+- Fix bugs about version controls.
+
 ## Full usage example
 
 ```typescript
-import { sleep } from 'known-types/lib/sleep'
 import { action, observable } from 'mobx'
-import { AsyncStorage, AsyncTrunk } from './src/async'
+import { AsyncTrunk } from './src/async'
 import { nonenumerable } from './src/utils'
 
 
@@ -163,6 +186,7 @@ export declare class SyncTrunk {
 Both `SyncTrunk` and `AsyncTrunk` need the following optional options:
 
 ```typescript
+import { AsyncStorage } from './src/async'
 export interface AsyncTrunkOptions {
     // A storage instance, you can use localStorage, sessionStorage, or AsyncStorage(React Native)
     // or any else you wanted.

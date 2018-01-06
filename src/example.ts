@@ -8,10 +8,10 @@
  * @desc example.ts
  */
 
-import { sleep } from 'known-types/lib/sleep'
 import { action, observable } from 'mobx'
+import { sleep } from 'monofile-utilities/lib/sleep'
 import { AsyncStorage, AsyncTrunk } from './async'
-import { nonenumerable } from './utils'
+import { ignore } from './ignore'
 
 const data: any = {}
 
@@ -39,7 +39,9 @@ class UserStore {
   @observable list = observable.array<number>()
   @observable map = observable.map<number>()
 
-  @nonenumerable @observable extra = 'extra'
+  @ignore
+  @observable
+  extra = 'extra'
 
   @action
   add() {
@@ -74,7 +76,8 @@ const Ignored = new IgnoredStore()
 class RootStore {
   __version__ = 1
   user = User
-  @nonenumerable ignore = Ignored
+  @ignore
+  ignore = Ignored
 }
 
 const store = new RootStore()
