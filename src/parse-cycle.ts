@@ -7,14 +7,18 @@
  * @version 1.0.0
  * @desc parse-cycle.ts
  */
-
 // TODO support es5 browsers
-export function parseCycle(input: object, map = new Map<object, string[]>(), prefix = '') {
+import { isPrimitive } from './is-primitive'
+
+export function parseCycle(input: object, map = new Map<object, string[]>(), prefix = ''): [any, string[]][] {
+  if (isPrimitive(input)) {
+    return []
+  }
   if (!map.has(input)) {
     map.set(input, [prefix || '.'])
   }
   for (const item of Object.entries(input)) {
-    if (!item[1] || Object.keys(item[1]).length === 0) {
+    if (isPrimitive(item[1]) || Object.keys(item[1]).length === 0) {
       continue
     }
     const subPrefix = prefix + '.' + item[0]
@@ -26,7 +30,7 @@ export function parseCycle(input: object, map = new Map<object, string[]>(), pre
     }
   }
   if (prefix !== '') {
-    return
+    return []
   }
   const output: [any, string[]][] = []
   map.forEach((value, key) => {

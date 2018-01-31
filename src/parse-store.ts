@@ -8,11 +8,11 @@
  * @desc parse-store.ts
  */
 
-import { isObservableArray, isObservableMap, observable } from 'mobx'
+import { action, isObservableArray, isObservableMap, observable } from 'mobx'
 import { __VERSION__, __VERSIONS__ } from './constants'
 import { isPrimitive } from './is-primitive'
 
-export function parseStore(store: any, data: any) {
+let parseStore = (store: any, data: any) => {
   // if store or data is empty, break it
   if (!store || !data) {
     return
@@ -72,3 +72,7 @@ export function parseStore(store: any, data: any) {
     }
   }
 }
+
+parseStore = action(parseStore)
+
+export { parseStore }

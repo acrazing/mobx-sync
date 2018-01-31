@@ -8,7 +8,7 @@
  * @desc async.ts
  */
 
-import { autorun, autorunAsync, IReactionDisposer } from 'mobx'
+import { autorun, autorunAsync, IReactionDisposer, runInAction } from 'mobx'
 import { __KEY__, __NAME__ } from './constants'
 import { parseCycle } from './parse-cycle'
 import { parseStore } from './parse-store'
@@ -60,7 +60,9 @@ export class AsyncTrunk {
     try {
       const data = await this.storage.getItem(this.storageKey)
       if (data) {
-        parseStore(this.store, JSON.parse(data))
+        runInAction(() => {
+          parseStore(this.store, JSON.parse(data))
+        })
       }
     } catch {
       // DO nothing

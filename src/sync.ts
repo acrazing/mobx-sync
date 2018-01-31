@@ -8,7 +8,7 @@
  * @desc sync.ts
  */
 
-import { autorun, autorunAsync, IReactionDisposer } from 'mobx'
+import { autorun, autorunAsync, IReactionDisposer, runInAction } from 'mobx'
 import { __KEY__, __NAME__, parseCycle, parseStore } from './utils'
 
 export interface SyncTrunkOptions {
@@ -50,7 +50,9 @@ export class SyncTrunk {
     try {
       const data = this.storage.getItem(this.storageKey)
       if (data) {
-        parseStore(this.store, JSON.parse(data))
+        runInAction(() => {
+          parseStore(this.store, JSON.parse(data))
+        })
       }
     } catch {
       // DO nothing
