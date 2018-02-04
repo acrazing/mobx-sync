@@ -11,9 +11,9 @@
 import * as assert from 'assert'
 import { observable } from 'mobx'
 import { sleep } from 'monofile-utilities/lib/sleep'
-import { ignore } from '../lib/ignore'
 import { AsyncTrunk } from './async'
 import { Keywords } from './constants'
+import { ignore } from './ignore'
 import { MemoryStorage } from './memory-storage'
 import { toJSON } from './to-json'
 import { version } from './version'
@@ -89,7 +89,7 @@ describe('async trunk', () => {
         [Keywords.Versions]: {
           version: 4,
         },
-        version: 'version'
+        version: 'version',
       },
       [Keywords.Versions]: {
         n2: 5,
