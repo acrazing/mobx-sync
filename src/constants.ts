@@ -8,7 +8,9 @@
  * @desc constants.ts
  */
 
-export const __VERSION__ = '__version__'
-export const __VERSIONS__ = '__versions__'
-export const __KEY__ = '__STORAGE__'
-export const __NAME__ = '__PERSIST__'
+export const Keywords = {
+  Versions: '#__mobx_sync_versions__#',
+  DefaultKey: '#__mobx_sync__#',
+  ActionName: '__PERSIST__',
+  NodeVersion: '#__this__#',
+}

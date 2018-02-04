@@ -7,9 +7,10 @@
  * @version 1.0.0
  * @desc parse-cycle.ts
  */
-// TODO support es5 browsers
+
 import { isPrimitive } from './is-primitive'
 
+// TODO support es5 browsers
 export function parseCycle(input: object, map = new Map<object, string[]>(), prefix = ''): [any, string[]][] {
   if (isPrimitive(input)) {
     return []

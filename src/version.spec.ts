@@ -9,13 +9,13 @@
  */
 
 import * as assert from 'assert'
-import { toJSON } from './misc.spec'
+import { Keywords } from './constants'
+import { toJSON } from './to-json'
 import { version } from './version'
 
 describe('version control', () => {
+  @version(2)
   class Node {
-    __version__ = 1
-
     @version(1)
     id = 0
   }
@@ -23,6 +23,6 @@ describe('version control', () => {
   const node = new Node()
 
   it('should persist versions', () => {
-    assert.deepEqual(toJSON(node), { __versions__: { id: 1 }, __version__: 1, id: 0, toJSON: void 0 })
+    assert.deepEqual(toJSON(node), { [Keywords.Versions]: { id: 1, [Keywords.NodeVersion]: 2 }, id: 0 })
   })
 })

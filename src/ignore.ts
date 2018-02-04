@@ -8,7 +8,4 @@
  * @desc ignore.ts
  */
 
-import { nonenumerable } from 'monofile-utilities/lib/nonenumerable'
-
-export const ignore = nonenumerable
-export { nonenumerable }
+export { nonenumerable as ignore } from 'monofile-utilities/lib/nonenumerable'

@@ -8,7 +8,10 @@
  * @desc misc.spec.ts
  */
 
-export function toJSON(data: any) {
+export function toJSON(data: any, recursive = true) {
+  if (recursive) {
+    return JSON.parse(JSON.stringify(data))
+  }
   if (!data || !('toJSON' in data)) {
     return data
   }

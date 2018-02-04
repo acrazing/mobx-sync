@@ -2,6 +2,11 @@
 
 A library to persist your mobx stores.
 
+## Updates
+
+- remove interface to implement it, use `@version` decorator
+- `@version` decorator supports to decorating class directly, it means the version of the node it self, the `__version__` field is deprecated
+
 ## Features
 
 - Use JSON as the serialize/unserialize method.

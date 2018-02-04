@@ -9,7 +9,7 @@
  */
 
 import { action, isObservableArray, isObservableMap, observable } from 'mobx'
-import { __VERSION__, __VERSIONS__ } from './constants'
+import { Keywords } from './constants'
 import { isPrimitive } from './is-primitive'
 
 let parseStore = (store: any, data: any) => {
@@ -17,21 +17,21 @@ let parseStore = (store: any, data: any) => {
   if (!store || !data) {
     return
   }
+  const dataVersions = data[Keywords.Versions] || {}
+  const storeVersions = store[Keywords.Versions] || {}
   // version control for node
-  if ((__VERSION__ in store) || (__VERSION__ in data)) {
-    if (store[__VERSION__] !== data[__VERSION__]) {
+  if ((Keywords.NodeVersion in dataVersions) || (Keywords.NodeVersion in storeVersions)) {
+    if (dataVersions[Keywords.NodeVersion] !== storeVersions[Keywords.NodeVersion]) {
       return
     }
   }
-  const dataVersions = data[__VERSIONS__] || {}
-  const storeVersions = store[__VERSIONS__] || {}
   // use data to iterate for avoid store does not set default value, and then the
   // properties will not exist actually.
   // so, the observable map/array/object field must has a default value, when the
   // object is constructed.
   for (let key in data) {
     // skip internal fields
-    if (key === __VERSIONS__ || key === __VERSION__) {
+    if (key === Keywords.Versions) {
       continue
     }
     if (data.hasOwnProperty(key)) {

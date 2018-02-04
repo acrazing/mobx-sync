@@ -9,7 +9,9 @@
  */
 
 import { autorun, autorunAsync, IReactionDisposer, runInAction } from 'mobx'
-import { __KEY__, __NAME__, parseCycle, parseStore } from './utils'
+import { Keywords } from './constants'
+import { parseCycle } from './parse-cycle'
+import { parseStore } from './parse-store'
 
 export interface SyncTrunkOptions {
   storage?: Storage;
@@ -18,17 +20,23 @@ export interface SyncTrunkOptions {
   delay?: number;
 }
 
+export interface SyncStorage {
+  getItem(key: string): string | null;
+  setItem(key: string, value: string): void;
+  removeItem(key: string): void;
+}
+
 export class SyncTrunk {
   disposer: IReactionDisposer
   private store: any
-  private storage: Storage
+  private storage: SyncStorage
   private storageKey: string
   private sync: boolean
   private delay: number
 
   constructor(
     store: any,
-    { storage = localStorage, storageKey = __KEY__, sync = false, delay = 0 }: SyncTrunkOptions = {},
+    { storage = localStorage, storageKey = Keywords.DefaultKey, sync = false, delay = 0 }: SyncTrunkOptions = {},
   ) {
     this.store = store
     this.storage = storage
@@ -60,9 +68,9 @@ export class SyncTrunk {
     // persist before listen change
     this.persist()
     if (this.sync) {
-      this.disposer = autorun(__NAME__, this.persist.bind(this))
+      this.disposer = autorun(Keywords.ActionName, this.persist.bind(this))
     } else {
-      this.disposer = autorunAsync(__NAME__, this.persist.bind(this), this.delay)
+      this.disposer = autorunAsync(Keywords.ActionName, this.persist.bind(this), this.delay)
     }
   }
 

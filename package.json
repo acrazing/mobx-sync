@@ -1,6 +1,6 @@
 {
   "name": "mobx-sync",
-  "version": "0.1.4",
+  "version": "0.2.0",
   "description": "A library to persist your mobx stores.",
   "main": "lib/index.js",
   "scripts": {
