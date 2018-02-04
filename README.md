@@ -48,14 +48,15 @@ A library to persist your mobx stores.
 ```typescript
 import { action, observable } from 'mobx'
 import { AsyncTrunk } from './src/async'
-import { nonenumerable } from './src/utils'
+import { ignore } from './src/ignore'
+import { version } from './src/version'
 
 
 // user store node class
+@version(1)
 class UserStore {
   // the version of the node, if different with the persisted version,
   // the persisted data of the node will be ignored
-  __version__ = 1
 
   // the observable primative field
   @observable id = 0
@@ -67,7 +68,7 @@ class UserStore {
   // observable and IGNORED for persist
   // a @nonenumerable decorated field will not be persisted
   // by JSON.stringify
-  @nonenumerable @observable extra = 'extra'
+  @ignore @observable extra = 'extra'
 
   // action(function) will not be persisted
   @action
@@ -90,8 +91,8 @@ class UserStore {
 const User = new UserStore()
 
 // any other store node class
+@version(1)
 class IgnoredStore {
-  __version__ = 1
   @observable id = 1
 
   @action
@@ -104,19 +105,19 @@ class IgnoredStore {
 const Ignored = new IgnoredStore()
 
 // root store class, use class to use decorator
+@version(1)
 class RootStore {
   // the root node version, if the field changed
   // all the child nodes or fields on this node
   // will be ignored, if it is root, means all
   // the data will be ignored.
-  __version__ = 1
   
   // user node
   user = User
   
   // ignored node, this node will never be
   // persisted
-  @nonenumerable ignore = Ignored
+  @ignore ignore = Ignored
 }
 
 const store = new RootStore()
