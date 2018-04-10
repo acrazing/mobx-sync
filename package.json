@@ -5,7 +5,7 @@
   "main": "lib/index.js",
   "scripts": {
     "prepublish": "rm -rf lib && tsc",
-    "test": "mocha --require ts-node/register ./src/**/*.spec.ts"
+    "test": "mocha --require ts-node/register --slow 1000 ./src/**/*.spec.ts"
   },
   "repository": {
     "type": "git",

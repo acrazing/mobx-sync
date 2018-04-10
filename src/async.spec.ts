@@ -34,11 +34,8 @@ class N1 {
 }
 
 class N2 {
-  @observable
-  hello = 'world'
-  @ignore
-  @observable
-  ignored = 'ignored'
+  @observable hello = 'world'
+  @ignore @observable ignored = 'ignored'
 }
 
 class N3 {
@@ -61,11 +58,15 @@ class Root {
 
 const root = new Root()
 
-const storage = new MemoryStorage(true)
+const storage = new MemoryStorage()
 
 const t1 = new AsyncTrunk(root, { storage })
 
 describe('async trunk', () => {
+  it('should be ignored', () => {
+    const n2 = new N2()
+    assert.deepEqual(toJSON(n2), { hello: 'world' })
+  })
   it('version control', () => {
     assert.deepEqual(toJSON(root), {
       n1: {
@@ -130,5 +131,22 @@ describe('async trunk', () => {
     assert.deepEqual(toJSON(root2.n2), toJSON(root.n2))
     assert.deepEqual(toJSON(root2.n3), toJSON(new N3()))
     assert.deepEqual(toJSON(root2.nm), toJSON(new N5()))
+  })
+
+  it('should autorun', async () => {
+    class Node {
+      @observable hello = 'world'
+    }
+
+    const store = { node: new Node }
+
+    const storage = new MemoryStorage(true)
+
+    const trunk = new AsyncTrunk(store, { storage, storageKey: 'key' })
+
+    await trunk.init()
+    store.node.hello = 'John'
+    await sleep(100)
+    assert.deepEqual(JSON.parse(storage.getItem('key') as string), { node: { hello: 'John' } })
   })
 })
