@@ -22,13 +22,13 @@ import { version } from './version'
 class N1 {
   @observable
   int = 1
-  map = observable.map<number>()
+  map = observable.map<string, number>()
   list = observable.array<number>()
   @version(1)
   @observable
   vStr = 'vStr'
   @version(2)
-  vMap = observable.map<number>()
+  vMap = observable.map<string, number>()
   @version(3)
   vList = observable.array<number>()
 }

@@ -8,7 +8,7 @@
  * @desc async.ts
  */
 
-import { autorun, autorunAsync, IReactionDisposer, runInAction } from 'mobx'
+import { autorun, IReactionDisposer, runInAction } from 'mobx'
 import { Keywords } from './constants'
 import { parseCycle } from './parse-cycle'
 import { parseStore } from './parse-store'
@@ -23,7 +23,6 @@ export interface AsyncStorage {
 export interface AsyncTrunkOptions {
   storage?: AsyncStorage | SyncStorage;
   storageKey?: string;
-  sync?: boolean;
   delay?: number;
 }
 
@@ -32,19 +31,16 @@ export class AsyncTrunk {
   private store: any
   private storage: AsyncStorage | SyncStorage
   private storageKey: string
-  private sync: boolean
   private delay: number
 
   constructor(store: any, {
     storage = localStorage,
     storageKey = Keywords.DefaultKey,
-    sync = false,
     delay = 0,
   }: AsyncTrunkOptions = {}) {
     this.store = store
     this.storage = storage
     this.storageKey = storageKey
-    this.sync = sync
     this.delay = delay
   }
 
@@ -70,11 +66,7 @@ export class AsyncTrunk {
     }
     // persist before listen change
     this.persist()
-    if (this.sync) {
-      this.disposer = autorun(Keywords.ActionName, this.persist.bind(this))
-    } else {
-      this.disposer = autorunAsync(Keywords.ActionName, this.persist.bind(this), this.delay)
-    }
+    this.disposer = autorun(this.persist.bind(this), { name: Keywords.ActionName, delay: this.delay })
   }
 
   async clear() {

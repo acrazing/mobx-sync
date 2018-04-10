@@ -8,7 +8,7 @@
  * @desc sync.ts
  */
 
-import { autorun, autorunAsync, IReactionDisposer, runInAction } from 'mobx'
+import { autorun, IReactionDisposer, runInAction } from 'mobx'
 import { Keywords } from './constants'
 import { parseCycle } from './parse-cycle'
 import { parseStore } from './parse-store'
@@ -16,7 +16,6 @@ import { parseStore } from './parse-store'
 export interface SyncTrunkOptions {
   storage?: Storage;
   storageKey?: string;
-  sync?: boolean;
   delay?: number;
 }
 
@@ -31,17 +30,15 @@ export class SyncTrunk {
   private store: any
   private storage: SyncStorage
   private storageKey: string
-  private sync: boolean
   private delay: number
 
   constructor(
     store: any,
-    { storage = localStorage, storageKey = Keywords.DefaultKey, sync = false, delay = 0 }: SyncTrunkOptions = {},
+    { storage = localStorage, storageKey = Keywords.DefaultKey, delay = 0 }: SyncTrunkOptions = {},
   ) {
     this.store = store
     this.storage = storage
     this.storageKey = storageKey
-    this.sync = sync
     this.delay = delay
   }
 
@@ -50,7 +47,7 @@ export class SyncTrunk {
       this.storage.setItem(this.storageKey, JSON.stringify(this.store))
     } catch {
       // TODO report error
-      console.error('cycle reference occured', parseCycle(this.store))
+      console.error('cycle reference occurred', parseCycle(this.store))
     }
   }
 
@@ -67,11 +64,7 @@ export class SyncTrunk {
     }
     // persist before listen change
     this.persist()
-    if (this.sync) {
-      this.disposer = autorun(Keywords.ActionName, this.persist.bind(this))
-    } else {
-      this.disposer = autorunAsync(Keywords.ActionName, this.persist.bind(this), this.delay)
-    }
+    this.disposer = autorun(this.persist.bind(this), { name: Keywords.ActionName, delay: this.delay })
   }
 
   clear() {

@@ -2,14 +2,9 @@
 
 A library to persist your mobx stores.
 
-## Updates
-
-- remove interface to implement it, use `@version` decorator
-- `@version` decorator supports to decorating class directly, it means the version of the node it self, the `__version__` field is deprecated
-
 ## Features
 
-- Use JSON as the serialize/unserialize method.
+- Use JSON as the serialize/unserialize protocol.
 - Version control for each store node.
 - Ignore any store node as you wanted.
 - Support react native.
@@ -20,6 +15,16 @@ A library to persist your mobx stores.
 - var npm: `npm install mobx --save`
 
 ## Change Log
+
+### 0.3.0
+
+- update the version of mobx to 4.x
+- recover the index entry for js users
+
+### 0.2.0
+
+- remove interface to implement it, use `@version` decorator
+- `@version` decorator supports to decorating class directly, it means the version of the node it self, the `__version__` field is deprecated
 
 ### 0.1.0
 
@@ -46,92 +51,78 @@ A library to persist your mobx stores.
 ## Full usage example
 
 ```typescript
-import { action, observable } from 'mobx'
-import { AsyncTrunk } from './src/async'
-import { ignore } from './src/ignore'
-import { version } from './src/version'
+import { version, AsyncTrunk, ignore } from './src'
+import { observable } from 'mobx'
 
-
-// user store node class
+// define a store node with some thing
+// version control for node, if the version of persisted
+// data about this node is different to current version,
+// it will not be loaded.
 @version(1)
 class UserStore {
-  // the version of the node, if different with the persisted version,
-  // the persisted data of the node will be ignored
-
-  // the observable primative field
-  @observable id = 0
-  // obervable list
-  @observable list = observable.array<number>()
-  // observable map
-  @observable map = observable.map<number>()
-
-  // observable and IGNORED for persist
-  // a @nonenumerable decorated field will not be persisted
-  // by JSON.stringify
-  @ignore @observable extra = 'extra'
-
-  // action(function) will not be persisted
-  @action
-  add() {
-    this.id++
-  }
-
-  @action
-  push() {
-    this.list.push(++this.id)
-  }
-
-  @action
-  set() {
-    this.map.set(++this.id + '', this.id)
-  }
-}
-
-// user store instance
-const User = new UserStore()
-
-// any other store node class
-@version(1)
-class IgnoredStore {
-  @observable id = 1
-
-  @action
-  add() {
-    this.id++
-  }
-}
-
-// ignored store node instance
-const Ignored = new IgnoredStore()
-
-// root store class, use class to use decorator
-@version(1)
-class RootStore {
-  // the root node version, if the field changed
-  // all the child nodes or fields on this node
-  // will be ignored, if it is root, means all
-  // the data will be ignored.
+  // normal store field
+  @observable name = 'user'
   
-  // user node
-  user = User
+  // map
+  @observable map = observable.map<string, string>()
   
-  // ignored node, this node will never be
-  // persisted
-  @ignore ignore = Ignored
+  // array
+  @observable array = observable.array<string, string>()
+  
+  // some other user defined model
+  @observable model = new NestedNode()
+  
+  // version control for field, the function is same to
+  // class decorator
+  // please note that the `@observable` decorator must placed
+  // at the end of the decorators
+  @version(2) @observable foo = 'bar'
+  
+  // ignore a field, this field will not be persisted, nor
+  // loaded from persisted data, which means even if the
+  // previous version of data persisted contains this field,
+  // will still not be loaded.
+  @ignore @observable ignored = 'ignored'
 }
 
-const store = new RootStore()
+// define another store node
+class NestedNode {
+  @observable foo = 'bar'
+}
 
-const trunk = new AsyncTrunk(store, {})
+// init global store
+const store = { user: new UserStore() }
 
+// create a persist actor
+const trunk = new AsyncTrunk(store, { storage: localStorage })
+
+// load persisted data to store, and auto persist store
+// if it changed.
 trunk.init().then(() => {
-  // do any stuff at here, changed the data in `store`
-  // will be persist, asynchronously.
-  // default delay is in nextTick
+  // do any staff as you wanted with loaded store
+  console.log(store.user.model.foo)
 })
 ```
 
-## API
+## API Reference
+
+### Storage interface
+
+```typescript
+// just localStorage or sessionStorage
+export interface SyncStorage {
+  getItem(key: string): string | null;
+  setItem(key: string, value: string): void;
+  removeItem(key: string): void;
+}
+
+// React Native AsyncStorage
+export interface AsyncStorage {
+    getItem(key: string): Promise<string | null>;
+    setItem(key: string, value: string): Promise<void>;
+    removeItem(key: string): Promise<void>;
+}
+```
 
 ### Asynchronous persist
 
@@ -139,17 +130,16 @@ This is the main class to persist data.
 
 ```typescript
 import { IReactionDisposer } from 'mobx';
-
-export interface AsyncStorage {
-    getItem(key: string): Promise<string | null>;
-    setItem(key: string, value: string): Promise<void>;
-    removeItem(key: string): Promise<void>;
-}
+import { AsyncStorage, SyncStorage } from './src'
 
 export interface AsyncTrunkOptions {
-    storage?: AsyncStorage | Storage;
+    // for async trunk, you can use async storage or sync storage
+    // working with ReactNative.AsyncStorage
+    storage?: AsyncStorage | SyncStorage;
+    // the key for storage
     storageKey?: string;
-    sync?: boolean;
+    // autorun delay time, if not set, it will be synchronous
+    // see the document about `mobx@autorun`
     delay?: number;
 }
 
@@ -169,11 +159,12 @@ This is use for persist data synchronously. This requires the storage API is syn
 
 ```typescript
 import { IReactionDisposer } from 'mobx';
+import { SyncStorage } from './src'
 
 export interface SyncTrunkOptions {
-    storage?: Storage;
+    // for sync trunk, you can just use SyncStorage, just like sessionStorage or localStorage
+    storage?: SyncStorage;
     storageKey?: string;
-    sync?: boolean;
     delay?: number;
 }
 
@@ -184,25 +175,6 @@ export declare class SyncTrunk {
     init(): void;
     clear(): void;
     updateStore(store: any): void;
-}
-```
-
-### Options
-
-Both `SyncTrunk` and `AsyncTrunk` need the following optional options:
-
-```typescript
-import { AsyncStorage } from './src/async'
-export interface AsyncTrunkOptions {
-    // A storage instance, you can use localStorage, sessionStorage, or AsyncStorage(React Native)
-    // or any else you wanted.
-    storage?: AsyncStorage | Storage;
-    // the key of the storage, if changed, the old data will not be cleared
-    storageKey?: string;
-    // for mobx autorun sync or async, default is async
-    sync?: boolean;
-    // if autorun is async, the delay time to run, default is 0
-    delay?: number;
 }
 ```
 
