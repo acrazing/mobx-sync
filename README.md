@@ -16,6 +16,10 @@ A library to persist your mobx stores.
 
 ## Change Log
 
+### 0.4.0
+
+- fix issues for dependencies
+
 ### 0.3.0
 
 - update the version of mobx to 4.x
