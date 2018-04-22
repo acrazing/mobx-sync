@@ -16,6 +16,10 @@ A library to persist your mobx stores.
 
 ## Change Log
 
+### 0.5.0
+
+- fix `@ignore` decorator with `mobx@4.x`, for [some implicit reason](https://github.com/mobxjs/mobx/issues/1493#issuecomment-381836531), please note that the current version of `@ignore` performance maybe down.
+
 ### 0.4.0
 
 - fix issues for dependencies

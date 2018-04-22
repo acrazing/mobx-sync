@@ -8,4 +8,29 @@
  * @desc ignore.ts
  */
 
-export { nonenumerable as ignore } from 'monofile-utilities/lib/nonenumerable'
+import { Keywords } from './constants';
+
+export function ignore(proto: any, key: string) {
+  if (!proto.hasOwnProperty(Keywords.Ignores)) {
+    Object.defineProperty(
+      proto,
+      Keywords.Ignores,
+      { enumerable: false, value: Object.create(proto[Keywords.Ignores] || null) },
+    );
+    const { toJSON } = proto;
+    proto.toJSON = function () {
+      const data = toJSON ? toJSON.call(this) : this;
+      if (!this[Keywords.Ignores]) {
+        return data;
+      }
+      const dump: any = {};
+      for (const key in data) {
+        if (data.hasOwnProperty(key) && !this[Keywords.Ignores][key]) {
+          dump[key] = data[key];
+        }
+      }
+      return dump;
+    };
+  }
+  proto[Keywords.Ignores][key] = true;
+}

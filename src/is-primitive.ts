@@ -10,8 +10,8 @@
 
 export function isPrimitive(value: any) {
   if (value === void 0 || value === null) {
-    return true
+    return true;
   }
-  const type = typeof value
-  return type === 'string' || type === 'number' || type === 'boolean'
+  const type = typeof value;
+  return type === 'string' || type === 'number' || type === 'boolean';
 }

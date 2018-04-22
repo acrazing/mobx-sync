@@ -8,36 +8,37 @@
  * @desc parse-cycle.ts
  */
 
-import { isPrimitive } from './is-primitive'
+import { isPrimitive } from './is-primitive';
 
 // TODO support es5 browsers
 export function parseCycle(input: object, map = new Map<object, string[]>(), prefix = ''): [any, string[]][] {
   if (isPrimitive(input)) {
-    return []
+    return [];
   }
   if (!map.has(input)) {
-    map.set(input, [prefix || '.'])
+    map.set(input, [prefix || '.']);
   }
   for (const item of Object.entries(input)) {
     if (isPrimitive(item[1]) || Object.keys(item[1]).length === 0) {
-      continue
+      continue;
     }
-    const subPrefix = prefix + '.' + item[0]
+    const subPrefix = prefix + '.' + item[0];
     if (!map.has(item[1])) {
-      map.set(item[1], [subPrefix])
-      parseCycle(item[1], map, subPrefix)
-    } else {
-      (map.get(item[1]) as string[]).push(subPrefix)
+      map.set(item[1], [subPrefix]);
+      parseCycle(item[1], map, subPrefix);
+    }
+    else {
+      (map.get(item[1]) as string[]).push(subPrefix);
     }
   }
   if (prefix !== '') {
-    return []
+    return [];
   }
-  const output: [any, string[]][] = []
+  const output: [any, string[]][] = [];
   map.forEach((value, key) => {
     if (value.length > 1) {
-      output.push([key, value])
+      output.push([key, value]);
     }
-  })
-  return output
+  });
+  return output;
 }

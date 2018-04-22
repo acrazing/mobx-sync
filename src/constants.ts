@@ -13,4 +13,5 @@ export const Keywords = {
   DefaultKey: '#__mobx_sync__#',
   ActionName: '__PERSIST__',
   NodeVersion: '#__this__#',
-}
+  Ignores: '#__mobx_ignores__#',
+};

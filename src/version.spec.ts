@@ -8,21 +8,21 @@
  * @desc version.spec.ts
  */
 
-import * as assert from 'assert'
-import { Keywords } from './constants'
-import { toJSON } from './to-json'
-import { version } from './version'
+import * as assert from 'assert';
+import { Keywords } from './constants';
+import { toJSON } from './to-json';
+import { version } from './version';
 
 describe('version control', () => {
   @version(2)
   class Node {
     @version(1)
-    id = 0
+    id = 0;
   }
 
-  const node = new Node()
+  const node = new Node();
 
   it('should persist versions', () => {
-    assert.deepEqual(toJSON(node), { [Keywords.Versions]: { id: 1, [Keywords.NodeVersion]: 2 }, id: 0 })
-  })
-})
+    assert.deepEqual(toJSON(node), { [Keywords.Versions]: { id: 1, [Keywords.NodeVersion]: 2 }, id: 0 });
+  });
+});

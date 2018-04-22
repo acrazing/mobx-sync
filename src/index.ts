@@ -8,9 +8,9 @@
  * @desc index.ts
  */
 
-export { AsyncTrunk, AsyncStorage, AsyncTrunkOptions } from './async'
-export { ignore } from './ignore'
-export { parseCycle } from './parse-cycle'
-export { SyncStorage, SyncTrunk, SyncTrunkOptions } from './sync'
-export { version } from './version'
-export { MemoryStorage } from './memory-storage'
+export { AsyncTrunk, AsyncStorage, AsyncTrunkOptions } from './async';
+export { ignore } from './ignore';
+export { parseCycle } from './parse-cycle';
+export { SyncStorage, SyncTrunk, SyncTrunkOptions } from './sync';
+export { version } from './version';
+export { MemoryStorage } from './memory-storage';

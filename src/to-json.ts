@@ -10,14 +10,14 @@
 
 export function toJSON(data: any, recursive = true) {
   if (recursive) {
-  	const str = JSON.stringify(data)
-  	if(str === void 0) {
-  	  return void 0
-  	}
-    return JSON.parse(str)
+    const str = JSON.stringify(data);
+    if (str === void 0) {
+      return void 0;
+    }
+    return JSON.parse(str);
   }
   if (!data || !('toJSON' in data)) {
-    return data
+    return data;
   }
-  return data.toJSON()
+  return data.toJSON();
 }

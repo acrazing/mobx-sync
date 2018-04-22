@@ -8,28 +8,28 @@
  * @desc memory-storage.ts
  */
 
-import { SMap } from 'monofile-utilities/lib/map'
-import { format } from 'util'
-import { SyncStorage } from './sync'
+import { SMap } from 'monofile-utilities/lib/map';
+import { format } from 'util';
+import { SyncStorage } from './sync';
 
 export class MemoryStorage implements SyncStorage {
+  private data: SMap<string> = {};
+
   constructor(public debug = false) {
   }
 
-  private data: SMap<string> = {}
-
   getItem(key: string) {
-    this.debug && process.stderr.write(format('storage.get %s: %s\n', key, this.data[key]))
-    return this.data.hasOwnProperty(key) ? this.data[key] : null
+    this.debug && process.stderr.write(format('storage.get %s: %s\n', key, this.data[key]));
+    return this.data.hasOwnProperty(key) ? this.data[key] : null;
   }
 
   removeItem(key: string) {
-    this.debug && process.stderr.write(format('storage.remove %s\n', key))
-    delete this.data[key]
+    this.debug && process.stderr.write(format('storage.remove %s\n', key));
+    delete this.data[key];
   }
 
   setItem(key: string, value: string) {
-    this.debug && process.stderr.write(format('storage.set %s: %s\n', key, value))
-    this.data[key] = value + ''
+    this.debug && process.stderr.write(format('storage.set %s: %s\n', key, value));
+    this.data[key] = value + '';
   }
 }
