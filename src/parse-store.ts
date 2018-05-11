@@ -19,17 +19,20 @@ let parseStore = (store: any, data: any) => {
   }
   const dataVersions = data[Keywords.Versions] || {};
   const storeVersions = store[Keywords.Versions] || {};
+  const deserializers = store[Keywords.Format] || {};
   // version control for node
-  if ((Keywords.NodeVersion in dataVersions) || (Keywords.NodeVersion in storeVersions)) {
-    if (dataVersions[Keywords.NodeVersion] !== storeVersions[Keywords.NodeVersion]) {
+  if ((Keywords.NodeVersion in dataVersions)
+    || (Keywords.NodeVersion in storeVersions)) {
+    if (dataVersions[Keywords.NodeVersion]
+      !== storeVersions[Keywords.NodeVersion]) {
       return;
     }
   }
-  // use data to iterate for avoid store does not set default value, and then the
-  // properties will not exist actually.
-  // so, the observable map/array/object field must has a default value, when the
-  // object is constructed.
-  for (let key in data) {
+  // use data to iterate for avoid store does not set default value, and then
+  // the properties will not exist actually. so, the observable
+  // map/array/object field must has a default value, when the object is
+  // constructed.
+  for (const key in data) {
     // skip internal fields
     if (key === Keywords.Versions) {
       continue;
@@ -48,7 +51,10 @@ let parseStore = (store: any, data: any) => {
       }
       const storeValue = store[key];
       const dataValue = data[key];
-      if (isObservableArray(storeValue)) {
+      if (deserializers[key] && deserializers[key].deserializer) {
+        store[key] = deserializers[key].deserializer(dataValue, storeValue);
+      }
+      else if (isObservableArray(storeValue)) {
         // mobx array
         store[key] = observable.array(dataValue);
       }
@@ -58,9 +64,6 @@ let parseStore = (store: any, data: any) => {
       }
       else if (isPrimitive(dataValue)) {
         // js/mobx primitive objects
-        // this means a primitive object just like Date, RegExp, etc. will be
-        // covert to string when use JSON.stringify, maybe need a decorator to
-        // hook the setter to covert it to target format.
         store[key] = dataValue;
       }
       else if (!storeValue) {
@@ -68,8 +71,6 @@ let parseStore = (store: any, data: any) => {
         store[key] = dataValue;
       }
       else {
-        // TODO check the storeValue is primitive to avoid ignore
-        // the not initialized object field.
         // nested pure js object or mobx observable object
         parseStore(storeValue, dataValue);
       }

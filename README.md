@@ -16,6 +16,21 @@ A library to persist your mobx stores.
 
 ## Change Log
 
+### 0.6.0
+
+- add `@format` decorator to convert persisted data to specified data struct, for example, you can persist/load a `Date` field as follow:
+    ```typescript
+    import { format, date, regexp } from './src/format'
+    class Node {
+      // use the decorator directly
+      @format((value) => new Date(value)) date = new Date();
+    
+      // alt, you can use date/regexp decorator for date/regexp directly
+      @date date2 = new Date();
+      @regexp regexp = /abc/igum;
+    }
+    ```
+
 ### 0.5.0
 
 - fix `@ignore` decorator with `mobx@4.x`, for [some implicit reason](https://github.com/mobxjs/mobx/issues/1493#issuecomment-381836531), please note that the current version of `@ignore` performance maybe down.
@@ -69,47 +84,47 @@ import { observable } from 'mobx'
 @version(1)
 class UserStore {
   // normal store field
-  @observable name = 'user'
+  @observable name = 'user';
   
   // map
-  @observable map = observable.map<string, string>()
+  @observable map = observable.map<string, string>();
   
   // array
-  @observable array = observable.array<string, string>()
+  @observable array = observable.array<string, string>();
   
   // some other user defined model
-  @observable model = new NestedNode()
+  @observable model = new NestedNode();
   
   // version control for field, the function is same to
   // class decorator
   // please note that the `@observable` decorator must placed
   // at the end of the decorators
-  @version(2) @observable foo = 'bar'
+  @version(2) @observable foo = 'bar';
   
   // ignore a field, this field will not be persisted, nor
   // loaded from persisted data, which means even if the
   // previous version of data persisted contains this field,
   // will still not be loaded.
-  @ignore @observable ignored = 'ignored'
+  @ignore @observable ignored = 'ignored';
 }
 
 // define another store node
 class NestedNode {
-  @observable foo = 'bar'
+  @observable foo = 'bar';
 }
 
 // init global store
-const store = { user: new UserStore() }
+const store = { user: new UserStore() };
 
 // create a persist actor
-const trunk = new AsyncTrunk(store, { storage: localStorage })
+const trunk = new AsyncTrunk(store, { storage: localStorage });
 
 // load persisted data to store, and auto persist store
 // if it changed.
 trunk.init().then(() => {
   // do any staff as you wanted with loaded store
-  console.log(store.user.model.foo)
-})
+  console.log(store.user.model.foo);
+});
 ```
 
 ## API Reference

@@ -12,11 +12,10 @@ import { Keywords } from './constants';
 
 export function ignore(proto: any, key: string) {
   if (!proto.hasOwnProperty(Keywords.Ignores)) {
-    Object.defineProperty(
-      proto,
-      Keywords.Ignores,
-      { enumerable: false, value: Object.create(proto[Keywords.Ignores] || null) },
-    );
+    Object.defineProperty(proto, Keywords.Ignores, {
+      enumerable: false,
+      value: Object.create(proto[Keywords.Ignores] || null),
+    });
     const { toJSON } = proto;
     proto.toJSON = function () {
       const data = toJSON ? toJSON.call(this) : this;
