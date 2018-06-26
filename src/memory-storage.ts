@@ -9,6 +9,7 @@
  */
 
 import { SMap } from 'monofile-utilities/lib/map';
+import * as util from 'util';
 import { SyncStorage } from './sync';
 
 export class MemoryStorage implements SyncStorage {
@@ -18,17 +19,25 @@ export class MemoryStorage implements SyncStorage {
   }
 
   getItem(key: string) {
-    this.debug && console.log('storage.get %s: %s', key, this.data[key]);
+    this.debug && process.stderr.write(util.format(
+      'storage.get %s: %s\n',
+      key,
+      this.data[key],
+    ));
     return this.data.hasOwnProperty(key) ? this.data[key] : null;
   }
 
   removeItem(key: string) {
-    this.debug && console.log('storage.remove %s', key);
+    this.debug && process.stderr.write(util.format('storage.remove %s\n', key));
     delete this.data[key];
   }
 
   setItem(key: string, value: string) {
-    this.debug && console.log('storage.set %s: %s', key, value);
+    this.debug && process.stderr.write(util.format(
+      'storage.set %s: %s\n',
+      key,
+      value,
+    ));
     this.data[key] = value + '';
   }
 }

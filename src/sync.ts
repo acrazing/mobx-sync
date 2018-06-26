@@ -9,9 +9,9 @@
  */
 
 import { autorun, IReactionDisposer, runInAction } from 'mobx';
-import { Keywords } from './constants';
-import { parseCycle } from './parse-cycle';
+import { Keys } from './keys';
 import { parseStore } from './parse-store';
+import { parseCycle } from './utils';
 
 export interface SyncTrunkOptions {
   storage?: Storage;
@@ -34,7 +34,7 @@ export class SyncTrunk {
 
   constructor(
     store: any,
-    { storage = localStorage, storageKey = Keywords.DefaultKey, delay = 0 }: SyncTrunkOptions = {},
+    { storage = localStorage, storageKey = Keys.DefaultKey, delay = 0 }: SyncTrunkOptions = {},
   ) {
     this.store = store;
     this.storage = storage;
@@ -64,7 +64,10 @@ export class SyncTrunk {
     }
     // persist before listen change
     this.persist();
-    this.disposer = autorun(this.persist.bind(this), { name: Keywords.ActionName, delay: this.delay });
+    this.disposer = autorun(
+      this.persist.bind(this),
+      { name: Keys.ActionName, delay: this.delay },
+    );
   }
 
   clear() {

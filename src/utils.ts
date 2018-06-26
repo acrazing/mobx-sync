@@ -1,17 +1,36 @@
 /*!
- *
- * Copyright 2018 - acrazing
- *
- * @author acrazing joking.young@gmail.com
- * @since 2018-01-06 12:23:01
- * @version 1.0.0
- * @desc parse-cycle.ts
+ * Copyright 2018 acrazing <joking.young@gmail.com>. All rights reserved.
+ * @since 2018-06-27 00:21:42
  */
 
-import { isPrimitive } from './is-primitive';
+export function isPrimitive(value: any) {
+  if (value === void 0 || value === null) {
+    return true;
+  }
+  const type = typeof value;
+  return type === 'string' || type === 'number' || type === 'boolean';
+}
+
+export function toJSON(data: any, recursive = true) {
+  if (recursive) {
+    const str = JSON.stringify(data);
+    if (str === void 0) {
+      return void 0;
+    }
+    return JSON.parse(str);
+  }
+  if (!data || !('toJSON' in data)) {
+    return data;
+  }
+  return data.toJSON();
+}
 
 // TODO support es5 browsers
-export function parseCycle(input: object, map = new Map<object, string[]>(), prefix = ''): [any, string[]][] {
+export function parseCycle(
+  input: object,
+  map = new Map<object, string[]>(),
+  prefix = '',
+): [any, string[]][] {
   if (isPrimitive(input)) {
     return [];
   }

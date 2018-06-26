@@ -9,10 +9,10 @@
  */
 
 import { autorun, IReactionDisposer, runInAction } from 'mobx';
-import { Keywords } from './constants';
-import { parseCycle } from './parse-cycle';
+import { Keys } from './keys';
 import { parseStore } from './parse-store';
 import { SyncStorage } from './sync';
+import { parseCycle } from './utils';
 
 export interface AsyncStorage {
   getItem(key: string): Promise<string | null>;
@@ -30,12 +30,12 @@ export class AsyncTrunk {
   disposer: IReactionDisposer;
   private store: any;
   private storage: AsyncStorage | SyncStorage;
-  private storageKey: string;
-  private delay: number;
+  readonly storageKey: string;
+  readonly delay: number;
 
   constructor(store: any, {
     storage = localStorage,
-    storageKey = Keywords.DefaultKey,
+    storageKey = Keys.DefaultKey,
     delay = 0,
   }: AsyncTrunkOptions = {}) {
     this.store = store;
@@ -66,7 +66,14 @@ export class AsyncTrunk {
     }
     // persist before listen change
     this.persist();
-    this.disposer = autorun(this.persist.bind(this), { name: Keywords.ActionName, delay: this.delay });
+    this.disposer = autorun(
+      this.persist.bind(this),
+      {
+        name: Keys.ActionName,
+        delay: this.delay,
+        onError: (error) => console.error(error),
+      },
+    );
   }
 
   async clear() {

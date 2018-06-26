@@ -9,22 +9,22 @@
  */
 
 import { action, isObservableArray, isObservableMap, observable } from 'mobx';
-import { Keywords } from './constants';
-import { isPrimitive } from './is-primitive';
+import { Keys } from './keys';
+import { isPrimitive } from './utils';
 
 let parseStore = (store: any, data: any) => {
   // if store or data is empty, break it
   if (!store || !data) {
     return;
   }
-  const dataVersions = data[Keywords.Versions] || {};
-  const storeVersions = store[Keywords.Versions] || {};
-  const deserializers = store[Keywords.Format] || {};
+  const dataVersions = data[Keys.Versions] || {};
+  const storeVersions = store[Keys.Versions] || {};
+  const deserializers = store[Keys.Format] || {};
   // version control for node
-  if ((Keywords.NodeVersion in dataVersions)
-    || (Keywords.NodeVersion in storeVersions)) {
-    if (dataVersions[Keywords.NodeVersion]
-      !== storeVersions[Keywords.NodeVersion]) {
+  if ((Keys.NodeVersion in dataVersions)
+    || (Keys.NodeVersion in storeVersions)) {
+    if (dataVersions[Keys.NodeVersion]
+      !== storeVersions[Keys.NodeVersion]) {
       return;
     }
   }
@@ -34,7 +34,7 @@ let parseStore = (store: any, data: any) => {
   // constructed.
   for (const key in data) {
     // skip internal fields
-    if (key === Keywords.Versions) {
+    if (key === Keys.Versions) {
       continue;
     }
     if (data.hasOwnProperty(key)) {
