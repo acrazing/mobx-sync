@@ -1,8 +1,10 @@
 {
   "name": "mobx-sync",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "A library to persist your mobx stores.",
-  "main": "lib/index.js",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "typings": "./lib/index.d.ts",
   "scripts": {
     "prepublish": "rm -rf lib && tsc",
     "test": "mocha --require ts-node/register --slow 1000 ./src/**/*.spec.ts",

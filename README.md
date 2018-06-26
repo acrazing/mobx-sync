@@ -4,10 +4,10 @@ A library to persist your mobx stores.
 
 ## Features
 
-- Use JSON as the serialize/unserialize protocol.
-- Version control for each store node.
-- Ignore any store node as you wanted.
-- Support react native.
+- Native JSON as the (de-)serialize protocol
+- Version control
+- Ignore control
+- React Native support
 
 ## Install
 
@@ -20,7 +20,7 @@ A library to persist your mobx stores.
 
 - add `@format` decorator to convert persisted data to specified data struct, for example, you can persist/load a `Date` field as follow:
     ```typescript
-    import { format, date, regexp } from './src/format'
+    import { format, date, regexp } from './src/decorators'
     class Node {
       // use the decorator directly
       @format((value) => new Date(value)) date = new Date();
