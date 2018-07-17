@@ -1,6 +1,6 @@
 {
   "name": "mobx-sync",
-  "version": "0.8.3",
+  "version": "0.8.4",
   "description": "A library to persist your mobx stores.",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -27,11 +27,9 @@
   },
   "homepage": "https://github.com/acrazing/mobx-sync#readme",
   "dependencies": {
-  },
-  "peerDependencies": {
-    "mobx": "^5.0.3",
-    "monofile-utilities": "^1.7.1",
-    "tslib": "^1.9.3"
+    "mobx": "*",
+    "monofile-utilities": "^1.7.3",
+    "tslib": "*"
   },
   "devDependencies": {
     "@types/mocha": "^5.2.3",

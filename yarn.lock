@@ -3,30 +3,30 @@
 
 
 "@types/lodash@^4.14.107":
-  version "4.14.110"
-  resolved "http://registry.npm.taobao.org/@types/lodash/download/@types/lodash-4.14.110.tgz#fb07498f84152947f30ea09d89207ca07123461e"
+  version "4.14.112"
+  resolved "http://registry.npm.taobao.org/@types/lodash/download/@types/lodash-4.14.112.tgz#4a8d8e5716b97a1ac01fe1931ad1e4cba719de5a"
 
 "@types/mocha@^5.2.3":
-  version "5.2.3"
-  resolved "http://registry.npm.taobao.org/@types/mocha/download/@types/mocha-5.2.3.tgz#11f3a5629d67cd444fa6c94536576244e6a52ea9"
+  version "5.2.5"
+  resolved "http://registry.npm.taobao.org/@types/mocha/download/@types/mocha-5.2.5.tgz#8a4accfc403c124a0bafe8a9fc61a05ec1032073"
 
 "@types/node@^10.3.6":
-  version "10.3.6"
-  resolved "http://registry.npm.taobao.org/@types/node/download/@types/node-10.3.6.tgz#ea8aab9439b59f40d19ec5f13b44642344872b11"
+  version "10.5.2"
+  resolved "http://registry.npm.taobao.org/@types/node/download/@types/node-10.5.2.tgz#f19f05314d5421fe37e74153254201a7bf00a707"
 
 "@types/node@^9.6.5":
-  version "9.6.22"
-  resolved "http://registry.npm.taobao.org/@types/node/download/@types/node-9.6.22.tgz#05b55093faaadedea7a4b3f76e9a61346a6dd209"
+  version "9.6.23"
+  resolved "http://registry.npm.taobao.org/@types/node/download/@types/node-9.6.23.tgz#fc429962c1b75f32bd66214a3997f660e8434f0d"
 
-"@types/react@^16.3.11":
-  version "16.4.2"
-  resolved "http://registry.npm.taobao.org/@types/react/download/@types/react-16.4.2.tgz#f1a9cf1ee85221530def2ac26aee20f910a9dac8"
+"@types/react@^16.4.4":
+  version "16.4.6"
+  resolved "http://registry.npm.taobao.org/@types/react/download/@types/react-16.4.6.tgz#5024957c6bcef4f02823accf5974faba2e54fada"
   dependencies:
     csstype "^2.2.0"
 
 "@types/yargs@^11.0.0":
-  version "11.0.0"
-  resolved "http://registry.npm.taobao.org/@types/yargs/download/@types/yargs-11.0.0.tgz#124b9ed9c65b7091cc36da59ae12cbd47d8745ea"
+  version "11.1.0"
+  resolved "http://registry.npm.taobao.org/@types/yargs/download/@types/yargs-11.1.0.tgz#923caa0cca53745d83f139eeff4fa7906c52ebce"
 
 ansi-regex@^2.0.0:
   version "2.1.1"
@@ -136,8 +136,8 @@ fs.realpath@^1.0.0:
   resolved "http://registry.npm.taobao.org/fs.realpath/download/fs.realpath-1.0.0.tgz#1504ad2523158caa40db4a2787cb01411994ea4f"
 
 get-caller-file@^1.0.1:
-  version "1.0.2"
-  resolved "http://registry.npm.taobao.org/get-caller-file/download/get-caller-file-1.0.2.tgz#f702e63127e7e231c160a80c1554acb70d5047e5"
+  version "1.0.3"
+  resolved "http://registry.npm.taobao.org/get-caller-file/download/get-caller-file-1.0.3.tgz#f978fa4c90d1dfe7ff2d6beda2a515e713bdcf4a"
 
 get-stream@^3.0.0:
   version "3.0.0"
@@ -257,11 +257,7 @@ mkdirp@0.5.1, mkdirp@^0.5.1:
   dependencies:
     minimist "0.0.8"
 
-mobx@^4.2.0:
-  version "4.3.1"
-  resolved "http://registry.npm.taobao.org/mobx/download/mobx-4.3.1.tgz#334e5aab4916b1d43f0faf3605a64b1b4b3ccb8d"
-
-mobx@^5.0.3:
+mobx@*:
   version "5.0.3"
   resolved "http://registry.npm.taobao.org/mobx/download/mobx-5.0.3.tgz#53b97f2a0f9b0dd7774c96249f81bf2d513d8e1c"
 
@@ -281,16 +277,15 @@ mocha@^5.2.0:
     mkdirp "0.5.1"
     supports-color "5.4.0"
 
-monofile-utilities@^1.7.1:
-  version "1.7.1"
-  resolved "http://registry.npm.taobao.org/monofile-utilities/download/monofile-utilities-1.7.1.tgz#3d0de85a528dfc7c998a9a6e33afddb2a82305b5"
+monofile-utilities@^1.7.3:
+  version "1.7.3"
+  resolved "http://registry.npm.taobao.org/monofile-utilities/download/monofile-utilities-1.7.3.tgz#9725364d896646514aee3826fa8874ccd5ecc911"
   dependencies:
     "@types/lodash" "^4.14.107"
     "@types/node" "^9.6.5"
-    "@types/react" "^16.3.11"
+    "@types/react" "^16.4.4"
     "@types/yargs" "^11.0.0"
     lodash "^4.17.5"
-    mobx "^4.2.0"
     tslib "^1.9.0"
     yargs "^11.0.0"
 
@@ -445,7 +440,7 @@ ts-node@^7.0.0:
     source-map-support "^0.5.6"
     yn "^2.0.0"
 
-tslib@^1.9.0, tslib@^1.9.3:
+tslib@*, tslib@^1.9.0:
   version "1.9.3"
   resolved "http://registry.npm.taobao.org/tslib/download/tslib-1.9.3.tgz#d7e4dd79245d85428c4d7e4822a79917954ca286"
 
@@ -489,8 +484,8 @@ yargs-parser@^9.0.2:
     camelcase "^4.1.0"
 
 yargs@^11.0.0:
-  version "11.0.0"
-  resolved "http://registry.npm.taobao.org/yargs/download/yargs-11.0.0.tgz#c052931006c5eee74610e5fc0354bedfd08a201b"
+  version "11.1.0"
+  resolved "http://registry.npm.taobao.org/yargs/download/yargs-11.1.0.tgz#90b869934ed6e871115ea2ff58b03f4724ed2d77"
   dependencies:
     cliui "^4.0.0"
     decamelize "^1.1.1"
