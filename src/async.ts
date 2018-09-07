@@ -9,15 +9,15 @@
  */
 
 import { autorun, IReactionDisposer, runInAction } from 'mobx';
-import { Keys } from './keys';
+import { KeyActionName, KeyDefaultKey } from './keys';
 import { parseStore } from './parse-store';
 import { SyncStorage } from './sync';
 import { parseCycle } from './utils';
 
 export interface AsyncStorage {
-  getItem(key: string): Promise<string | null>;
-  setItem(key: string, value: string): Promise<void>;
-  removeItem(key: string): Promise<void>;
+  getItem (key: string): Promise<string | null>;
+  setItem (key: string, value: string): Promise<void>;
+  removeItem (key: string): Promise<void>;
 }
 
 export interface AsyncTrunkOptions {
@@ -27,15 +27,15 @@ export interface AsyncTrunkOptions {
 }
 
 export class AsyncTrunk {
-  disposer: IReactionDisposer;
+  disposer!: IReactionDisposer;
   private store: any;
   private storage: AsyncStorage | SyncStorage;
   readonly storageKey: string;
   readonly delay: number;
 
-  constructor(store: any, {
+  constructor (store: any, {
     storage = localStorage,
-    storageKey = Keys.DefaultKey,
+    storageKey = KeyDefaultKey,
     delay = 0,
   }: AsyncTrunkOptions = {}) {
     this.store = store;
@@ -44,16 +44,17 @@ export class AsyncTrunk {
     this.delay = delay;
   }
 
-  async persist() {
+  async persist () {
     try {
       await this.storage.setItem(this.storageKey, JSON.stringify(this.store));
-    } catch {
+    }
+    catch {
       // TODO report error
       console.error('cycle reference occurred', parseCycle(this.store));
     }
   }
 
-  async init() {
+  async init () {
     try {
       const data = await this.storage.getItem(this.storageKey);
       if (data) {
@@ -61,7 +62,8 @@ export class AsyncTrunk {
           parseStore(this.store, JSON.parse(data));
         });
       }
-    } catch {
+    }
+    catch {
       // DO nothing
     }
     // persist before listen change
@@ -69,18 +71,18 @@ export class AsyncTrunk {
     this.disposer = autorun(
       this.persist.bind(this),
       {
-        name: Keys.ActionName,
+        name: KeyActionName,
         delay: this.delay,
         onError: (error) => console.error(error),
       },
     );
   }
 
-  async clear() {
+  async clear () {
     return this.storage.removeItem(this.storageKey);
   }
 
-  updateStore(store: any) {
+  updateStore (store: any) {
     this.store = store;
     return this.persist();
   }

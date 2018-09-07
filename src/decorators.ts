@@ -5,15 +5,15 @@
 
 import { __assign } from 'tslib';
 import { inject } from './inject';
-import { Keys } from './keys';
+import { KeyFormat, KeyIgnores, KeyNodeVersion, KeyVersions } from './keys';
 
-export function format<I, O = I>(
+export function format<I, O = I> (
   deserializer: (persistedValue: O, currentValue: I) => I,
   serializer?: (value: I) => O,
 ): PropertyDecorator {
   return (target: any, propertyKey: string | symbol) => {
-    inject(target, Keys.Format);
-    target[Keys.Format][propertyKey] = { deserializer, serializer };
+    inject(target, KeyFormat);
+    target[KeyFormat][propertyKey] = { deserializer, serializer };
   };
 }
 
@@ -29,20 +29,20 @@ export const regexp = format<RegExp, RegExpStore>(
   (value) => ({ flags: value.flags, source: value.source }),
 );
 
-export function ignore(target: any, propertyKey: string) {
-  inject(target, Keys.Ignores);
-  target[Keys.Ignores][propertyKey] = true;
+export function ignore (target: any, propertyKey: string) {
+  inject(target, KeyIgnores);
+  target[KeyIgnores][propertyKey] = true;
 }
 
-export function version(value: number | string) {
-  return (target: any, key: string = Keys.NodeVersion) => {
+export function version (value: number | string) {
+  return (target: any, key: string = KeyNodeVersion) => {
     if (typeof target === 'function') {
       target = target.prototype;
     }
     inject(target);
-    if (!target.hasOwnProperty(Keys.Versions)) {
-      target[Keys.Versions] = __assign({}, target[Keys.Versions] || {});
+    if (!target.hasOwnProperty(KeyVersions)) {
+      target[KeyVersions] = __assign({}, target[KeyVersions] || {});
     }
-    target[Keys.Versions][key] = value;
+    target[KeyVersions][key] = value;
   };
 }

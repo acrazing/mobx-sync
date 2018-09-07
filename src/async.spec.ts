@@ -11,10 +11,10 @@
 import * as assert from 'assert';
 import { observable } from 'mobx';
 import { describe, it } from 'mocha';
-import { sleep } from 'monofile-utilities/lib/sleep';
+import { sleep } from 'monofile-utilities';
 import { AsyncTrunk } from './async';
 import { ignore, version } from './decorators';
-import { Keys } from './keys';
+import { KeyNodeVersion, KeyVersions } from './keys';
 import { MemoryStorage } from './memory-storage';
 import { toJSON } from './utils';
 
@@ -76,8 +76,8 @@ describe('async trunk', () => {
         vStr: 'vStr',
         vMap: {},
         vList: [],
-        [Keys.Versions]: {
-          [Keys.NodeVersion]: 4,
+        [KeyVersions]: {
+          [KeyNodeVersion]: 4,
           vStr: 1,
           vMap: 2,
           vList: 3,
@@ -87,12 +87,12 @@ describe('async trunk', () => {
         hello: 'world',
       },
       nm: {
-        [Keys.Versions]: {
+        [KeyVersions]: {
           version: 4,
         },
         version: 'version',
       },
-      [Keys.Versions]: {
+      [KeyVersions]: {
         n2: 5,
       },
     });

@@ -9,7 +9,7 @@
  */
 
 import { action, isObservableArray, isObservableMap, observable } from 'mobx';
-import { Keys } from './keys';
+import { KeyFormat, KeyNodeVersion, KeyVersions } from './keys';
 import { isPrimitive } from './utils';
 
 let parseStore = (store: any, data: any) => {
@@ -17,14 +17,14 @@ let parseStore = (store: any, data: any) => {
   if (!store || !data) {
     return;
   }
-  const dataVersions = data[Keys.Versions] || {};
-  const storeVersions = store[Keys.Versions] || {};
-  const deserializers = store[Keys.Format] || {};
+  const dataVersions = data[KeyVersions] || {};
+  const storeVersions = store[KeyVersions] || {};
+  const deserializers = store[KeyFormat] || {};
   // version control for node
-  if ((Keys.NodeVersion in dataVersions)
-    || (Keys.NodeVersion in storeVersions)) {
-    if (dataVersions[Keys.NodeVersion]
-      !== storeVersions[Keys.NodeVersion]) {
+  if ((KeyNodeVersion in dataVersions)
+    || (KeyNodeVersion in storeVersions)) {
+    if (dataVersions[KeyNodeVersion]
+      !== storeVersions[KeyNodeVersion]) {
       return;
     }
   }
@@ -34,7 +34,7 @@ let parseStore = (store: any, data: any) => {
   // constructed.
   for (const key in data) {
     // skip internal fields
-    if (key === Keys.Versions) {
+    if (key === KeyVersions) {
       continue;
     }
     if (data.hasOwnProperty(key)) {

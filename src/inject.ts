@@ -3,18 +3,18 @@
  * @since 2018-06-27 00:25:58
  */
 
-import { Keys } from './keys';
+import { KeyFormat, KeyIgnores, KeyInject, KeyVersions } from './keys';
 
-export function inject(target: any, key?: Keys) {
+export function inject (target: any, key?: string) {
   if (key !== void 0 && !target.hasOwnProperty(key)) {
     Object.defineProperty(target, key, {
       enumerable: false, value: Object.create(target[key] || null),
     });
   }
-  if (target.hasOwnProperty(Keys.Inject)) {
+  if (target.hasOwnProperty(KeyInject)) {
     return;
   }
-  Object.defineProperty(target, Keys.Inject, {
+  Object.defineProperty(target, KeyInject, {
     value: true,
     configurable: false,
     enumerable: false,
@@ -22,13 +22,13 @@ export function inject(target: any, key?: Keys) {
   const { toJSON } = target;
   target.toJSON = function () {
     let data: any = toJSON ? toJSON.call(this) || {} : this;
-    if (this[Keys.Format]) {
+    if (this[KeyFormat]) {
       const dump: any = {};
       for (const key in data) {
         if (data.hasOwnProperty(key)
-          && this[Keys.Format][key]
-          && this[Keys.Format][key].serializer) {
-          dump[key] = this[Keys.Format][key].serializer(data[key]);
+          && this[KeyFormat][key]
+          && this[KeyFormat][key].serializer) {
+          dump[key] = this[KeyFormat][key].serializer(data[key]);
         }
         else {
           dump[key] = data[key];
@@ -37,16 +37,16 @@ export function inject(target: any, key?: Keys) {
       data = dump;
     }
 
-    if (this[Keys.Ignores]) {
+    if (this[KeyIgnores]) {
       const dump: any = {};
       for (const key in data) {
-        if (data.hasOwnProperty(key) && !this[Keys.Ignores][key]) {
+        if (data.hasOwnProperty(key) && !this[KeyIgnores][key]) {
           dump[key] = data[key];
         }
       }
       data = dump;
     }
-    data[Keys.Versions] = target[Keys.Versions];
+    data[KeyVersions] = target[KeyVersions];
     return data;
   };
 }

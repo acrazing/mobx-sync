@@ -9,7 +9,7 @@
  */
 
 import { autorun, IReactionDisposer, runInAction } from 'mobx';
-import { Keys } from './keys';
+import { KeyActionName, KeyDefaultKey } from './keys';
 import { parseStore } from './parse-store';
 import { parseCycle } from './utils';
 
@@ -20,21 +20,21 @@ export interface SyncTrunkOptions {
 }
 
 export interface SyncStorage {
-  getItem(key: string): string | null;
-  setItem(key: string, value: string): void;
-  removeItem(key: string): void;
+  getItem (key: string): string | null;
+  setItem (key: string, value: string): void;
+  removeItem (key: string): void;
 }
 
 export class SyncTrunk {
-  disposer: IReactionDisposer;
+  disposer!: IReactionDisposer;
   private store: any;
   private storage: SyncStorage;
   private storageKey: string;
   private delay: number;
 
-  constructor(
+  constructor (
     store: any,
-    { storage = localStorage, storageKey = Keys.DefaultKey, delay = 0 }: SyncTrunkOptions = {},
+    { storage = localStorage, storageKey = KeyDefaultKey, delay = 0 }: SyncTrunkOptions = {},
   ) {
     this.store = store;
     this.storage = storage;
@@ -42,16 +42,17 @@ export class SyncTrunk {
     this.delay = delay;
   }
 
-  persist() {
+  persist () {
     try {
       this.storage.setItem(this.storageKey, JSON.stringify(this.store));
-    } catch {
+    }
+    catch {
       // TODO report error
       console.error('cycle reference occurred', parseCycle(this.store));
     }
   }
 
-  init() {
+  init () {
     try {
       const data = this.storage.getItem(this.storageKey);
       if (data) {
@@ -59,22 +60,23 @@ export class SyncTrunk {
           parseStore(this.store, JSON.parse(data));
         });
       }
-    } catch {
+    }
+    catch {
       // DO nothing
     }
     // persist before listen change
     this.persist();
     this.disposer = autorun(
       this.persist.bind(this),
-      { name: Keys.ActionName, delay: this.delay },
+      { name: KeyActionName, delay: this.delay },
     );
   }
 
-  clear() {
+  clear () {
     this.storage.removeItem(this.storageKey);
   }
 
-  updateStore(store: any) {
+  updateStore (store: any) {
     this.store = store;
     this.persist();
   }

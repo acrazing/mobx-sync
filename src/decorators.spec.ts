@@ -6,9 +6,9 @@
 import * as assert from 'assert';
 import { observable } from 'mobx';
 import { describe, it } from 'mocha';
-import { nonenumerable } from 'monofile-utilities/lib/nonenumerable';
+import { nonenumerable } from 'monofile-utilities';
 import { date, ignore, regexp, version } from './decorators';
-import { Keys } from './keys';
+import { KeyNodeVersion, KeyVersions } from './keys';
 import { parseStore } from './parse-store';
 import { toJSON } from './utils';
 
@@ -77,7 +77,7 @@ describe('decorator:version', () => {
   it('should persist versions', () => {
     assert.deepStrictEqual(
       toJSON(node),
-      { [Keys.Versions]: { id: 1, [Keys.NodeVersion]: 2 }, id: 0 },
+      { [KeyVersions]: { id: 1, [KeyNodeVersion]: 2 }, id: 0 },
     );
   });
 
@@ -96,7 +96,7 @@ describe('decorator:version', () => {
     assert.deepStrictEqual(toJSON(c), {
       p: 1,
       c: 2,
-      [Keys.Versions]: {
+      [KeyVersions]: {
         p: 1,
         c: 2,
       },

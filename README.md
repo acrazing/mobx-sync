@@ -1,206 +1,50 @@
-# mobx-sync
+# 开发指南
 
-A library to persist your mobx stores.
+## 开发工具
 
-## Features
+1. 建议使用 webstorm, 符合 lint 规范的 codeStyle 已经由模板自动生成,
+建议安装以下插件:
+    - toml - 高亮显示编辑 .env 文件, 需要在 File Types 里面绑定
+    - save actions - 保存文件时自动格式化代码
+2. vscode 的配置后面再补上吧
 
-- Native JSON as the (de-)serialize protocol
-- Version control
-- Ignore control
-- React Native support
+## 一些约定
 
-## Install
+### 目录结构
 
-- var yarn: `yarn add mobx-sync`
-- var npm: `npm install mobx --save`
+- `src/`: 源代码
+- `esm/`: library ts/babel 编译后的 es module output
+- `cjs/`: library ts/babel 编译后的 commonjs ouput
+- `build/`: project/service webpack 编译后的 assets output
+- `.cache/`: 编译缓存 output
+- `temp/`: 临时文件夹
 
-## Change Log
+以上:
 
-### 0.6.0
+- 除了`src/`会进入 vcs, 其它目录均不可以进入
+- `src/`, `esm/`, `cjs/` 会进入 npm 仓库, 其它不会
 
-- add `@format` decorator to convert persisted data to specified data struct, for example, you can persist/load a `Date` field as follow:
-    ```typescript
-    import { format, date, regexp } from './src/decorators'
-    class Node {
-      // use the decorator directly
-      @format((value) => new Date(value)) date = new Date();
-    
-      // alt, you can use date/regexp decorator for date/regexp directly
-      @date date2 = new Date();
-      @regexp regexp = /abc/igum;
-    }
-    ```
+### npm 命令
 
-### 0.5.0
+- `npm run start`: project 启动本地服务器, 并清除缓存
+- `npm run start:fast`: project 启动本地服务器, 不清除缓存
+- `npm run build`: project/library 统一的编译命令
+- `npm run build:cjs`: library 编译 commonjs
+- `npm run build:esm`: library 编译 es module
+- `npm run build:lizard-view-local`: service 编译 lizard 本地 view
+- `npm run clean`: 清除 output 及缓存目录
+- `npm run tsnode`: 用 ts-node 直接执行 ts 脚本
 
-- fix `@ignore` decorator with `mobx@4.x`, for [some implicit reason](https://github.com/mobxjs/mobx/issues/1493#issuecomment-381836531), please note that the current version of `@ignore` performance maybe down.
+### lock 文件与 npm 包版本控制
 
-### 0.4.0
+1. lock 文件不应该放入 vcs, 原因是 library 更新会导致 dependents 更新, 这会导致所有包都
+需要提交代码, 目前影响不大, 但是后续依赖多了就麻烦了.
+2. library 需要有合理的版本设计, 要明确 major, minor, patch 的作用:
+    - 依赖统一为 `^x.x.x` 形式
+    - 版本发布时, 有且只有存在 `breaking changes` 时, 需要发布 `major` 更新, 这个时候
+    dependents 需要手动更新依赖.
 
-- fix issues for dependencies
+### import 模式
 
-### 0.3.0
-
-- update the version of mobx to 4.x
-- recover the index entry for js users
-
-### 0.2.0
-
-- remove interface to implement it, use `@version` decorator
-- `@version` decorator supports to decorating class directly, it means the version of the node it self, the `__version__` field is deprecated
-
-### 0.1.0
-
-- Add version control for a field: you can use `@version` decorator to specify the version of the field, if the version is different for a field, the stored value will be ignored, for example:
-    ```typescript
-    // In first version of your application, you created a node with one field `id`, and did not specify the version
-    // of the field. Then persist it.
-    class Node {
-      id = 1
-    }
-  
-    // In current version, you need to update the data structure of the field `id`, just like change the type from
-    // `number` to `string`, and then you can add a version decorator for the field like follow:
-    import { version } from './src/version'
-    class NewNode {
-      @version(1)
-      id = '1'
-    }
-  
-    // And then, the data persisted that `id=1` will be ignored, after load, the value of the `id` will be `'1'`
-    ```
-- Fix bugs about version controls.
-
-## Full usage example
-
-```typescript
-import { version, AsyncTrunk, ignore } from './src'
-import { observable } from 'mobx'
-
-// define a store node with some thing
-// version control for node, if the version of persisted
-// data about this node is different to current version,
-// it will not be loaded.
-@version(1)
-class UserStore {
-  // normal store field
-  @observable name = 'user';
-  
-  // map
-  @observable map = observable.map<string, string>();
-  
-  // array
-  @observable array = observable.array<string, string>();
-  
-  // some other user defined model
-  @observable model = new NestedNode();
-  
-  // version control for field, the function is same to
-  // class decorator
-  // please note that the `@observable` decorator must placed
-  // at the end of the decorators
-  @version(2) @observable foo = 'bar';
-  
-  // ignore a field, this field will not be persisted, nor
-  // loaded from persisted data, which means even if the
-  // previous version of data persisted contains this field,
-  // will still not be loaded.
-  @ignore @observable ignored = 'ignored';
-}
-
-// define another store node
-class NestedNode {
-  @observable foo = 'bar';
-}
-
-// init global store
-const store = { user: new UserStore() };
-
-// create a persist actor
-const trunk = new AsyncTrunk(store, { storage: localStorage });
-
-// load persisted data to store, and auto persist store
-// if it changed.
-trunk.init().then(() => {
-  // do any staff as you wanted with loaded store
-  console.log(store.user.model.foo);
-});
-```
-
-## API Reference
-
-### Storage interface
-
-```typescript
-// just localStorage or sessionStorage
-export interface SyncStorage {
-  getItem(key: string): string | null;
-  setItem(key: string, value: string): void;
-  removeItem(key: string): void;
-}
-
-// React Native AsyncStorage
-export interface AsyncStorage {
-    getItem(key: string): Promise<string | null>;
-    setItem(key: string, value: string): Promise<void>;
-    removeItem(key: string): Promise<void>;
-}
-```
-
-### Asynchronous persist
-
-This is the main class to persist data.
-
-```typescript
-import { IReactionDisposer } from 'mobx';
-import { AsyncStorage, SyncStorage } from './src'
-
-export interface AsyncTrunkOptions {
-    // for async trunk, you can use async storage or sync storage
-    // working with ReactNative.AsyncStorage
-    storage?: AsyncStorage | SyncStorage;
-    // the key for storage
-    storageKey?: string;
-    // autorun delay time, if not set, it will be synchronous
-    // see the document about `mobx@autorun`
-    delay?: number;
-}
-
-export declare class AsyncTrunk {
-    disposer: IReactionDisposer;
-    constructor(store: any, options?: AsyncTrunkOptions);
-    persist(): Promise<void>;
-    init(): Promise<void>;
-    clear(): Promise<void>;
-    updateStore(store: any): Promise<void>;
-}
-```
-
-### Synchronous persist
-
-This is use for persist data synchronously. This requires the storage API is synchronous.
-
-```typescript
-import { IReactionDisposer } from 'mobx';
-import { SyncStorage } from './src'
-
-export interface SyncTrunkOptions {
-    // for sync trunk, you can just use SyncStorage, just like sessionStorage or localStorage
-    storage?: SyncStorage;
-    storageKey?: string;
-    delay?: number;
-}
-
-export declare class SyncTrunk {
-    disposer: IReactionDisposer;
-    constructor(store: any, options?: SyncTrunkOptions);
-    persist(): void;
-    init(): void;
-    clear(): void;
-    updateStore(store: any): void;
-}
-```
-
-## License
-
-[MIT](./LICENSE)
+禁止通过 `import xxx from <PKG>/<PATH>` 的形式引入某个文件, 除非引入的这个包可以明确
+其目录及文件结构不会发生变更.

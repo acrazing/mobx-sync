@@ -1,12 +1,28 @@
 {
-  "name": "mobx-sync",
-  "version": "0.8.4",
+  "name": "@shimo/mobx-sync",
+  "version": "1.0.0",
   "description": "A library to persist your mobx stores.",
-  "main": "./lib/index.js",
-  "types": "./lib/index.d.ts",
-  "typings": "./lib/index.d.ts",
+  "author": "yangjunbao <yangjunbao@shimo.im>",
+  "main": "cjs/index.js",
+  "module": "esm/index.js",
+  "types": "esm/index.d.ts",
+  "files": [
+    "src/",
+    "esm/",
+    "cjs/"
+  ],
+  "sideEffects": [
+    "*.css",
+    "*.less",
+    "*.scss"
+  ],
   "scripts": {
-    "prepublish": "rm -rf lib && tsc",
+    "clean": "rm -rf cjs esm build temp .cache",
+    "build:esm": "tsc --outDir esm --module esnext --declaration --declarationMap",
+    "build:cjs": "tsc --outDir cjs --module commonjs --declaration --declarationMap",
+    "build": "npm run clean && npm run build:esm && npm run build:cjs",
+    "tsnode": "ts-node -O '{\"resolveJsonModule\":true,\"module\":\"commonjs\",\"target\":\"es5\"}'",
+    "prepublishOnly": "npm run build",
     "test": "mocha --require ts-node/register --slow 1000 ./src/**/*.spec.ts",
     "test:watch": "mocha --watch --watch-extensions ts --reporter min --require ts-node/register --slow 1000 ./src/**/*.spec.ts "
   },
@@ -20,15 +36,10 @@
     "sync",
     "localStorage"
   ],
-  "author": "acrazing",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/acrazing/mobx-sync/issues"
-  },
-  "homepage": "https://github.com/acrazing/mobx-sync#readme",
   "dependencies": {
     "mobx": "*",
-    "monofile-utilities": "^1.7.3",
+    "monofile-utilities": "^2.0.1",
     "tslib": "*"
   },
   "devDependencies": {
@@ -36,6 +47,6 @@
     "@types/node": "^10.3.6",
     "mocha": "^5.2.0",
     "ts-node": "^7.0.0",
-    "typescript": "^2.9.2"
+    "typescript": "^3.0.3"
   }
 }
