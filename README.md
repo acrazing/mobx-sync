@@ -1,50 +1,79 @@
-# 开发指南
+# mobx-sync
 
-## 开发工具
+A library use JSON to persist your mobx stores with version control.
 
-1. 建议使用 webstorm, 符合 lint 规范的 codeStyle 已经由模板自动生成,
-建议安装以下插件:
-    - toml - 高亮显示编辑 .env 文件, 需要在 File Types 里面绑定
-    - save actions - 保存文件时自动格式化代码
-2. vscode 的配置后面再补上吧
+## Features
 
-## 一些约定
+- use `JSON.stringify/JSON.parse` as the deserialize/serialize method
+- version control by use `@version` decorator
+- ignore any store node by use `@ignore` decorator
+- support React Native
 
-### 目录结构
+## Install
 
-- `src/`: 源代码
-- `esm/`: library ts/babel 编译后的 es module output
-- `cjs/`: library ts/babel 编译后的 commonjs ouput
-- `build/`: project/service webpack 编译后的 assets output
-- `.cache/`: 编译缓存 output
-- `temp/`: 临时文件夹
+```bash
+# by yarn
+yarn add mobx-sync
 
-以上:
+# OR by npm
+npm i -S mobx-sync
+```
 
-- 除了`src/`会进入 vcs, 其它目录均不可以进入
-- `src/`, `esm/`, `cjs/` 会进入 npm 仓库, 其它不会
+## Quick Start
 
-### npm 命令
+```typescript jsx
+import { AsyncTrunk } from 'mobx-sync'
+import { observable } from 'mobx'
 
-- `npm run start`: project 启动本地服务器, 并清除缓存
-- `npm run start:fast`: project 启动本地服务器, 不清除缓存
-- `npm run build`: project/library 统一的编译命令
-- `npm run build:cjs`: library 编译 commonjs
-- `npm run build:esm`: library 编译 es module
-- `npm run build:lizard-view-local`: service 编译 lizard 本地 view
-- `npm run clean`: 清除 output 及缓存目录
-- `npm run tsnode`: 用 ts-node 直接执行 ts 脚本
+// create a mobx store object in any form
+const store = observable({ foo: 'bar' });
 
-### lock 文件与 npm 包版本控制
+// create a mobx-sync
+const trunk = new AsyncTrunk(store);
 
-1. lock 文件不应该放入 vcs, 原因是 library 更新会导致 dependents 更新, 这会导致所有包都
-需要提交代码, 目前影响不大, 但是后续依赖多了就麻烦了.
-2. library 需要有合理的版本设计, 要明确 major, minor, patch 的作用:
-    - 依赖统一为 `^x.x.x` 形式
-    - 版本发布时, 有且只有存在 `breaking changes` 时, 需要发布 `major` 更新, 这个时候
-    dependents 需要手动更新依赖.
+// load the persisted data to store
+trunk.init().then(() => {
+  // do any staff with loaded store
+  console.log(store.foo);
+})
+```
 
-### import 模式
+## Full Example
 
-禁止通过 `import xxx from <PKG>/<PATH>` 的形式引入某个文件, 除非引入的这个包可以明确
-其目录及文件结构不会发生变更.
+You can see it at [example](example/index.tsx)
+
+## API Reference
+
+- [version control](#version-control)
+- [ignore control](#ignore-control)
+- [custom formatter](#custom-formatter)
+- [async trunk](#async-trunk)
+- [sync trunk](#sync-trunk)
+
+TODO T_T
+
+## License
+
+```
+The MIT License (MIT)
+
+Copyright (c) 2016 acrazing
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```

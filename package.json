@@ -1,8 +1,8 @@
 {
-  "name": "@shimo/mobx-sync",
+  "name": "mobx-sync",
   "version": "1.0.0",
   "description": "A library to persist your mobx stores.",
-  "author": "yangjunbao <yangjunbao@shimo.im>",
+  "author": "acrazing <joking.young@gmail.com>",
   "main": "cjs/index.js",
   "module": "esm/index.js",
   "types": "esm/index.d.ts",
