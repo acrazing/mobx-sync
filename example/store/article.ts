@@ -4,9 +4,8 @@
  */
 
 import { observable } from 'mobx';
-import { date, version } from 'mobx-sync';
 import { ANY } from 'monofile-utilities';
-import { ignore } from '../../src';
+import { date, ignore, version } from '../../src';
 import { UserStore } from './user';
 
 export class ArticleStore {

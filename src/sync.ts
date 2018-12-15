@@ -8,21 +8,34 @@
  * @desc sync.ts
  */
 
-import { autorun, IReactionDisposer, runInAction } from 'mobx';
+import { autorun, IReactionDisposer } from 'mobx';
 import { KeyActionName, KeyDefaultKey } from './keys';
 import { parseStore } from './parse-store';
 import { parseCycle } from './utils';
 
-export interface SyncTrunkOptions {
-  storage?: Storage;
-  storageKey?: string;
-  delay?: number;
+export interface SyncStorage {
+  getItem(key: string): string | null;
+  setItem(key: string, value: string): void;
+  removeItem(key: string): void;
 }
 
-export interface SyncStorage {
-  getItem (key: string): string | null;
-  setItem (key: string, value: string): void;
-  removeItem (key: string): void;
+/**
+ * sync trunk initial options
+ */
+export interface SyncTrunkOptions {
+  /**
+   * storage, SyncStorage only
+   * default is localStorage
+   */
+  storage?: SyncStorage;
+  /**
+   * the storage key, default is KeyDefaultKey
+   */
+  storageKey?: string;
+  /**
+   * the delay time, default is 0
+   */
+  delay?: number;
 }
 
 export class SyncTrunk {
@@ -32,7 +45,7 @@ export class SyncTrunk {
   private storageKey: string;
   private delay: number;
 
-  constructor (
+  constructor(
     store: any,
     { storage = localStorage, storageKey = KeyDefaultKey, delay = 0 }: SyncTrunkOptions = {},
   ) {
@@ -42,27 +55,29 @@ export class SyncTrunk {
     this.delay = delay;
   }
 
-  persist () {
+  persist() {
     try {
       this.storage.setItem(this.storageKey, JSON.stringify(this.store));
-    }
-    catch {
+    } catch {
       // TODO report error
       console.error('cycle reference occurred', parseCycle(this.store));
     }
   }
 
-  init () {
+  /**
+   * init the store
+   */
+  init(initialStore?: any) {
     try {
       const data = this.storage.getItem(this.storageKey);
       if (data) {
-        runInAction(() => {
-          parseStore(this.store, JSON.parse(data));
-        });
+        parseStore(this.store, JSON.parse(data), false);
       }
-    }
-    catch {
+    } catch {
       // DO nothing
+    }
+    if (initialStore) {
+      parseStore(this.store, initialStore, true);
     }
     // persist before listen change
     this.persist();
@@ -72,11 +87,11 @@ export class SyncTrunk {
     );
   }
 
-  clear () {
+  clear() {
     this.storage.removeItem(this.storageKey);
   }
 
-  updateStore (store: any) {
+  updateStore(store: any) {
     this.store = store;
     this.persist();
   }

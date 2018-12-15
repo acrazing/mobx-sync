@@ -12,7 +12,7 @@ import { action, isObservableArray, isObservableMap, observable } from 'mobx';
 import { KeyFormat, KeyNodeVersion, KeyVersions } from './keys';
 import { isPrimitive } from './utils';
 
-let parseStore = (store: any, data: any) => {
+let parseStore = (store: any, data: any, isFromServer: boolean) => {
   // if store or data is empty, break it
   if (!store || !data) {
     return;
@@ -46,7 +46,7 @@ let parseStore = (store: any, data: any) => {
       // not assign stored data to it. this method need to the
       // store init the field with a value.
       const desc = Object.getOwnPropertyDescriptor(store, key);
-      if (desc && !desc.enumerable) {
+      if (desc && !desc.enumerable && !isFromServer) {
         continue;
       }
       const storeValue = store[key];
@@ -72,7 +72,7 @@ let parseStore = (store: any, data: any) => {
       }
       else {
         // nested pure js object or mobx observable object
-        parseStore(storeValue, dataValue);
+        parseStore(storeValue, dataValue, isFromServer);
       }
     }
   }

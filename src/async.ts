@@ -8,21 +8,39 @@
  * @desc async.ts
  */
 
-import { autorun, IReactionDisposer, runInAction } from 'mobx';
+import { autorun, IReactionDisposer } from 'mobx';
 import { KeyActionName, KeyDefaultKey } from './keys';
 import { parseStore } from './parse-store';
 import { SyncStorage } from './sync';
 import { parseCycle } from './utils';
 
+/**
+ * The async storage API
+ */
 export interface AsyncStorage {
-  getItem (key: string): Promise<string | null>;
-  setItem (key: string, value: string): Promise<void>;
-  removeItem (key: string): Promise<void>;
+  getItem(key: string): Promise<string | null>;
+  setItem(key: string, value: string): Promise<void>;
+  removeItem(key: string): Promise<void>;
 }
 
+/**
+ * the async trunk initial options
+ */
 export interface AsyncTrunkOptions {
+  /**
+   * storage, both AsyncStorage and SyncStorage is supported,
+   * default is localStorage
+   */
   storage?: AsyncStorage | SyncStorage;
+  /**
+   * the custom persisted key in storage,
+   * default is KeyDefaultKey
+   */
   storageKey?: string;
+  /**
+   * delay milliseconds for run the reaction for mobx,
+   * default is 0
+   */
   delay?: number;
 }
 
@@ -33,7 +51,7 @@ export class AsyncTrunk {
   readonly storageKey: string;
   readonly delay: number;
 
-  constructor (store: any, {
+  constructor(store: any, {
     storage = localStorage,
     storageKey = KeyDefaultKey,
     delay = 0,
@@ -44,27 +62,29 @@ export class AsyncTrunk {
     this.delay = delay;
   }
 
-  async persist () {
+  async persist() {
     try {
       await this.storage.setItem(this.storageKey, JSON.stringify(this.store));
-    }
-    catch {
+    } catch {
       // TODO report error
       console.error('cycle reference occurred', parseCycle(this.store));
     }
   }
 
-  async init () {
+  /**
+   * init the trunk async
+   */
+  async init(initialStore?: any) {
     try {
       const data = await this.storage.getItem(this.storageKey);
       if (data) {
-        runInAction(() => {
-          parseStore(this.store, JSON.parse(data));
-        });
+        parseStore(this.store, JSON.parse(data), false);
       }
-    }
-    catch {
+    } catch {
       // DO nothing
+    }
+    if (initialStore) {
+      parseStore(this.store, initialStore, true);
     }
     // persist before listen change
     this.persist();
@@ -78,11 +98,11 @@ export class AsyncTrunk {
     );
   }
 
-  async clear () {
+  async clear() {
     return this.storage.removeItem(this.storageKey);
   }
 
-  updateStore (store: any) {
+  updateStore(store: any) {
     this.store = store;
     return this.persist();
   }

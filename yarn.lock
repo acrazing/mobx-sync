@@ -14,6 +14,26 @@
   version "10.9.4"
   resolved "http://registry.npm.taobao.org/@types/node/download/@types/node-10.9.4.tgz#0f4cb2dc7c1de6096055357f70179043c33e9897"
 
+"@types/prop-types@*":
+  version "15.5.8"
+  resolved "http://registry.npm.taobao.org/@types/prop-types/download/@types/prop-types-15.5.8.tgz#8ae4e0ea205fe95c3901a5a1df7f66495e3a56ce"
+  integrity sha1-iuTg6iBf6Vw5AaWh339mSV46Vs4=
+
+"@types/react-dom@^16.0.11":
+  version "16.0.11"
+  resolved "http://registry.npm.taobao.org/@types/react-dom/download/@types/react-dom-16.0.11.tgz#bd10ccb0d9260343f4b9a49d4f7a8330a5c1f081"
+  integrity sha1-vRDMsNkmA0P0uaSdT3qDMKXB8IE=
+  dependencies:
+    "@types/react" "*"
+
+"@types/react@*", "@types/react@^16.7.17":
+  version "16.7.17"
+  resolved "http://registry.npm.taobao.org/@types/react/download/@types/react-16.7.17.tgz#3242e796a1ffbba4f49eae5915a67f4c079504e9"
+  integrity sha1-MkLnlqH/u6T0nq5ZFaZ/TAeVBOk=
+  dependencies:
+    "@types/prop-types" "*"
+    csstype "^2.2.0"
+
 "@types/yargs@*":
   version "11.1.1"
   resolved "http://registry.npm.taobao.org/@types/yargs/download/@types/yargs-11.1.1.tgz#2e724257167fd6b615dbe4e54301e65fe597433f"
@@ -80,6 +100,11 @@ cross-spawn@^5.0.1:
     lru-cache "^4.0.1"
     shebang-command "^1.2.0"
     which "^1.2.9"
+
+csstype@^2.2.0:
+  version "2.5.8"
+  resolved "http://registry.npm.taobao.org/csstype/download/csstype-2.5.8.tgz#4ce5aa16ea0d562ef9105fa3ae2676f199586a35"
+  integrity sha1-TOWqFuoNVi75EF+jriZ28ZlYajU=
 
 debug@3.1.0:
   version "3.1.0"
@@ -153,6 +178,13 @@ has-flag@^3.0.0:
 he@1.1.1:
   version "1.1.1"
   resolved "http://registry.npm.taobao.org/he/download/he-1.1.1.tgz#93410fd21b009735151f8868c2f271f3427e23fd"
+
+hoist-non-react-statics@^3.0.0:
+  version "3.2.1"
+  resolved "http://registry.npm.taobao.org/hoist-non-react-statics/download/hoist-non-react-statics-3.2.1.tgz#c09c0555c84b38a7ede6912b61efddafd6e75e1e"
+  integrity sha1-wJwFVchLOKft5pErYe/dr9bnXh4=
+  dependencies:
+    react-is "^16.3.2"
 
 inflight@^1.0.4:
   version "1.0.6"
@@ -244,6 +276,14 @@ mkdirp@0.5.1, mkdirp@^0.5.1:
   resolved "http://registry.npm.taobao.org/mkdirp/download/mkdirp-0.5.1.tgz#30057438eac6cf7f8c4767f38648d6697d75c903"
   dependencies:
     minimist "0.0.8"
+
+mobx-react@^5.4.3:
+  version "5.4.3"
+  resolved "http://registry.npm.taobao.org/mobx-react/download/mobx-react-5.4.3.tgz#6709b7dd89670c40e9815914ac2ca49cc02bfb47"
+  integrity sha1-Zwm33YlnDEDpgVkUrCyknMAr+0c=
+  dependencies:
+    hoist-non-react-statics "^3.0.0"
+    react-lifecycles-compat "^3.0.2"
 
 mobx@*:
   version "5.1.0"
@@ -340,6 +380,16 @@ pseudomap@^1.0.2:
   version "1.0.2"
   resolved "http://registry.npm.taobao.org/pseudomap/download/pseudomap-1.0.2.tgz#f052a28da70e618917ef0a8ac34c1ae5a68286b3"
 
+react-is@^16.3.2:
+  version "16.6.3"
+  resolved "http://registry.npm.taobao.org/react-is/download/react-is-16.6.3.tgz#d2d7462fcfcbe6ec0da56ad69047e47e56e7eac0"
+  integrity sha1-0tdGL8/L5uwNpWrWkEfkflbn6sA=
+
+react-lifecycles-compat@^3.0.2:
+  version "3.0.4"
+  resolved "http://registry.npm.taobao.org/react-lifecycles-compat/download/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
+  integrity sha1-TxonOv38jzSIqMUWv9p4+HI1I2I=
+
 require-directory@^2.1.1:
   version "2.1.1"
   resolved "http://registry.npm.taobao.org/require-directory/download/require-directory-2.1.1.tgz#8c64ad5fd30dab1c976e2344ffe7f792a6a6df42"
@@ -431,9 +481,10 @@ tslib@*:
   version "1.9.3"
   resolved "http://registry.npm.taobao.org/tslib/download/tslib-1.9.3.tgz#d7e4dd79245d85428c4d7e4822a79917954ca286"
 
-typescript@^3.0.3:
-  version "3.0.3"
-  resolved "http://registry.npm.taobao.org/typescript/download/typescript-3.0.3.tgz#4853b3e275ecdaa27f78fda46dc273a7eb7fc1c8"
+typescript@^3.2.2:
+  version "3.2.2"
+  resolved "http://registry.npm.taobao.org/typescript/download/typescript-3.2.2.tgz#fe8101c46aa123f8353523ebdcf5730c2ae493e5"
+  integrity sha1-/oEBxGqhI/g1NSPr3PVzDCrkk+U=
 
 which-module@^2.0.0:
   version "2.0.0"

@@ -3,11 +3,16 @@
  * @since 2018-09-08 10:46:07
  */
 
-import { AsyncTrunk } from 'mobx-sync';
 import * as React from 'react';
 import { render } from 'react-dom';
+import { AsyncTrunk } from '../src';
 import { App } from './App';
 import { store } from './store';
+
+/**
+ * the initial state injected by SSR
+ */
+declare const __INITIAL_STATE__: any;
 
 /**
  * @desc create an async trunk with custom options
@@ -34,7 +39,7 @@ const trunk = new AsyncTrunk(store, {
 /**
  * @desc load persisted stores
  */
-trunk.init().then(() => {
+trunk.init(__INITIAL_STATE__).then(() => {
   /**
    * @desc do any staff with the loaded store,
    * and any changes now will be persisted

@@ -7,6 +7,7 @@ import * as assert from 'assert';
 import { observable } from 'mobx';
 import { describe, it } from 'mocha';
 import { nonenumerable } from 'monofile-utilities';
+import { config } from './config';
 import { date, ignore, regexp, version } from './decorators';
 import { KeyNodeVersion, KeyVersions } from './keys';
 import { parseStore } from './parse-store';
@@ -33,7 +34,7 @@ describe('decorator:format', () => {
     store.date = new Date(0);
     store.reg = /def/igu;
     assert.notDeepEqual(toJSON(store), toJSON(n));
-    parseStore(store, data);
+    parseStore(store, data, false);
     assert.deepStrictEqual(store, n);
   });
 });
@@ -62,6 +63,31 @@ describe('decorator:ignore', () => {
       toJSON(new Node()),
       { n0: 'n0', n1: 'n1', n2: 'n2' },
     );
+  });
+});
+
+describe('decorator:ignore:ssr', () => {
+  before(() => config({ ssr: true }));
+  after(() => config({ ssr: false }));
+  it('should not ignore with ssr', () => {
+    class Node {
+      @ignore @observable onlyClientIgnored = 'onlyClientIgnored';
+      @ignore.ssr @observable ssrIgnored = 'ssrIgnored';
+    }
+
+    const node = new Node();
+
+    assert.deepStrictEqual(
+      toJSON(node),
+      { onlyClientIgnored: 'onlyClientIgnored' },
+    );
+
+    const data = new Node();
+    data.onlyClientIgnored = 'new value';
+    data.ssrIgnored = 'new value';
+    parseStore(node, toJSON(data), true);
+    assert.strictEqual(node.onlyClientIgnored, 'new value');
+    assert.strictEqual(node.ssrIgnored, 'ssrIgnored');
   });
 });
 

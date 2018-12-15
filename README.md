@@ -8,6 +8,7 @@ A library use JSON to persist your mobx stores with version control.
 - version control by use `@version` decorator
 - ignore any store node by use `@ignore` decorator
 - support React Native
+- support server side render (SSR)
 
 ## Install
 
