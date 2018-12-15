@@ -13,3 +13,4 @@ export {
   format, date, regexp, ignore, RegExpStore, version,
 } from './decorators';
 export { parseStore } from './parse-store';
+export { SyncStorage, SyncTrunk, SyncTrunkOptions } from './sync';

@@ -8,6 +8,7 @@ import { render } from 'react-dom';
 import { AsyncTrunk } from '../src';
 import { App } from './App';
 import { store } from './store';
+import localforage = require('localforage');
 
 /**
  * the initial state injected by SSR
@@ -25,7 +26,7 @@ const trunk = new AsyncTrunk(store, {
    *  - sessionStorage
    *  - ReactNative.AsyncStorage
    */
-  storage: localStorage,
+  storage: localforage as any,
   /**
    * @desc custom storage key, the default is `__mobx_sync__`
    */
