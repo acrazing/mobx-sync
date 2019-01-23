@@ -42,7 +42,7 @@
     "tslib": "*"
   },
   "peerDependencies": {
-    "mobx": "*"
+    "mobx": "^5.9.0"
   },
   "devDependencies": {
     "@types/mocha": "^5.2.3",
