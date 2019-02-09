@@ -14,3 +14,4 @@ export {
 } from './decorators';
 export { parseStore } from './parse-store';
 export { SyncStorage, SyncTrunk, SyncTrunkOptions } from './sync';
+export { config } from './config';
