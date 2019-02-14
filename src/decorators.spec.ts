@@ -5,8 +5,7 @@
 
 import * as assert from 'assert';
 import { observable } from 'mobx';
-import { describe, it } from 'mocha';
-import { nonenumerable } from 'monofile-utilities';
+import { nonenumerable } from 'monofile-utilities/lib/nonenumerable';
 import { config } from './config';
 import { date, ignore, regexp, version } from './decorators';
 import { KeyNodeVersion, KeyVersions } from './keys';
@@ -16,7 +15,7 @@ import { toJSON } from './utils';
 describe('decorator:format', () => {
   it('format date/regexp', () => {
     const time = new Date();
-    const reg = /abc/igum;
+    const reg = /abc/gimu;
 
     class N {
       @date date = time;
@@ -32,7 +31,7 @@ describe('decorator:format', () => {
     const data = JSON.parse(JSON.stringify(n));
     const store = new N();
     store.date = new Date(0);
-    store.reg = /def/igu;
+    store.reg = /def/giu;
     assert.notDeepEqual(toJSON(store), toJSON(n));
     parseStore(store, data, false);
     assert.deepStrictEqual(store, n);
@@ -59,16 +58,17 @@ describe('decorator:ignore', () => {
       @nonenumerable n3 = 'n3';
     }
 
-    assert.deepStrictEqual(
-      toJSON(new Node()),
-      { n0: 'n0', n1: 'n1', n2: 'n2' },
-    );
+    assert.deepStrictEqual(toJSON(new Node()), {
+      n0: 'n0',
+      n1: 'n1',
+      n2: 'n2',
+    });
   });
 });
 
 describe('decorator:ignore:ssr', () => {
-  before(() => config({ ssr: true }));
-  after(() => config({ ssr: false }));
+  beforeEach(() => config({ ssr: true }));
+  afterEach(() => config({ ssr: false }));
   it('should not ignore with ssr', () => {
     class Node {
       @ignore @observable onlyClientIgnored = 'onlyClientIgnored';
@@ -77,10 +77,9 @@ describe('decorator:ignore:ssr', () => {
 
     const node = new Node();
 
-    assert.deepStrictEqual(
-      toJSON(node),
-      { onlyClientIgnored: 'onlyClientIgnored' },
-    );
+    assert.deepStrictEqual(toJSON(node), {
+      onlyClientIgnored: 'onlyClientIgnored',
+    });
 
     const data = new Node();
     data.onlyClientIgnored = 'new value';
@@ -101,10 +100,10 @@ describe('decorator:version', () => {
   const node = new Node();
 
   it('should persist versions', () => {
-    assert.deepStrictEqual(
-      toJSON(node),
-      { [KeyVersions]: { id: 1, [KeyNodeVersion]: 2 }, id: 0 },
-    );
+    assert.deepStrictEqual(toJSON(node), {
+      [KeyVersions]: { id: 1, [KeyNodeVersion]: 2 },
+      id: 0,
+    });
   });
 
   it('should persist versions with extends', () => {
