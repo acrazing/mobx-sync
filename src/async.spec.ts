@@ -10,8 +10,7 @@
 
 import * as assert from 'assert';
 import { observable } from 'mobx';
-import { describe, it } from 'mocha';
-import { sleep } from 'monofile-utilities';
+import { sleep } from 'monofile-utilities/lib/sleep';
 import { AsyncTrunk } from './async';
 import { ignore, version } from './decorators';
 import { KeyNodeVersion, KeyVersions } from './keys';
@@ -110,8 +109,7 @@ describe('async trunk', () => {
     t1.disposer();
 
     @version(6)
-    class N4 extends N1 {
-    }
+    class N4 extends N1 {}
 
     class N5 extends Nm {
       @version(5)
@@ -137,7 +135,7 @@ describe('async trunk', () => {
       @observable hello = 'world 2';
     }
 
-    const store = { node: new Node };
+    const store = { node: new Node() };
 
     const storage = new MemoryStorage(true);
 
@@ -147,9 +145,8 @@ describe('async trunk', () => {
     store.node.hello = 'John';
     await sleep(100);
     store.node.hello = 'John 2';
-    assert.deepStrictEqual(
-      JSON.parse(storage.getItem('key')!),
-      { node: { hello: 'John 2' } },
-    );
+    assert.deepStrictEqual(JSON.parse(storage.getItem('key')!), {
+      node: { hello: 'John 2' },
+    });
   });
 });
