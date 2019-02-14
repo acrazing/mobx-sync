@@ -67,7 +67,7 @@ export class SyncTrunk {
   /**
    * init the store
    */
-  init(initialStore?: any) {
+  init(initialState?: any) {
     try {
       const data = this.storage.getItem(this.storageKey);
       if (data) {
@@ -76,8 +76,8 @@ export class SyncTrunk {
     } catch {
       // DO nothing
     }
-    if (initialStore) {
-      parseStore(this.store, initialStore, true);
+    if (initialState) {
+      parseStore(this.store, initialState, true);
     }
     // persist before listen change
     this.persist();

@@ -74,7 +74,7 @@ export class AsyncTrunk {
   /**
    * init the trunk async
    */
-  async init(initialStore?: any) {
+  async init(initialState?: any) {
     try {
       const data = await this.storage.getItem(this.storageKey);
       if (data) {
@@ -83,8 +83,8 @@ export class AsyncTrunk {
     } catch {
       // DO nothing
     }
-    if (initialStore) {
-      parseStore(this.store, initialStore, true);
+    if (initialState) {
+      parseStore(this.store, initialState, true);
     }
     // persist before listen change
     this.persist();
