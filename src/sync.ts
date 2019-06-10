@@ -9,9 +9,9 @@
  */
 
 import { autorun, IReactionDisposer } from 'mobx';
+import { noop } from 'monofile-utilities/lib/consts';
 import { KeyActionName, KeyDefaultKey } from './keys';
 import { parseStore } from './parse-store';
-import { parseCycle } from './utils';
 
 export interface SyncStorage {
   getItem(key: string): string | null;
@@ -36,31 +36,43 @@ export interface SyncTrunkOptions {
    * the delay time, default is 0
    */
   delay?: number;
+
+  /**
+   * error callback
+   * @param error
+   */
+  onError?: (error: any) => void;
 }
 
 export class SyncTrunk {
   disposer!: IReactionDisposer;
   private store: any;
   private storage: SyncStorage;
-  private storageKey: string;
-  private delay: number;
+  readonly storageKey: string;
+  readonly delay: number;
+  readonly onError: (error: any) => void;
 
   constructor(
     store: any,
-    { storage = localStorage, storageKey = KeyDefaultKey, delay = 0 }: SyncTrunkOptions = {},
+    {
+      storage = localStorage,
+      storageKey = KeyDefaultKey,
+      delay = 0,
+      onError = noop,
+    }: SyncTrunkOptions = {},
   ) {
     this.store = store;
     this.storage = storage;
     this.storageKey = storageKey;
     this.delay = delay;
+    this.onError = onError;
   }
 
   persist() {
     try {
       this.storage.setItem(this.storageKey, JSON.stringify(this.store));
-    } catch {
-      // TODO report error
-      console.error('cycle reference occurred', parseCycle(this.store));
+    } catch (error) {
+      this.onError(error);
     }
   }
 
@@ -81,10 +93,11 @@ export class SyncTrunk {
     }
     // persist before listen change
     this.persist();
-    this.disposer = autorun(
-      this.persist.bind(this),
-      { name: KeyActionName, delay: this.delay },
-    );
+    this.disposer = autorun(this.persist.bind(this), {
+      name: KeyActionName,
+      delay: this.delay,
+      onError: this.onError,
+    });
   }
 
   clear() {

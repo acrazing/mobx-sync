@@ -23,19 +23,19 @@ npm i -S mobx-sync
 ## Quick Start
 
 ```typescript jsx
-import { AsyncTrunk, date } from 'mobx-sync'
-import { observable } from 'mobx'
+import { AsyncTrunk, date } from 'mobx-sync';
+import { observable } from 'mobx';
 
 class Store {
   @observable
-  foo = 'bar'
-  
+  foo = 'bar';
+
   @date
   @observable
-  date = new Date()
+  date = new Date();
 }
 
-const store = new Store()
+const store = new Store();
 
 // create a mobx-sync instance, it will:
 // 1. load your state from localStorage & ssr renderred state
@@ -50,14 +50,14 @@ const trunk = new AsyncTrunk(store, { storage: localStorage });
 // argument of `init`, just like trunk.init(__INITIAL_STATE__)
 trunk.init().then(() => {
   // you can do any staff now, just like:
-  
+
   // 1. render app with inited state:
-  ReactDOM.render(<App store={store}/>)
-  
+  ReactDOM.render(<App store={store} />);
+
   // 2. update store, the update of the store will be persisted
   // automatically:
-  store.foo = 'foo bar'
-})
+  store.foo = 'foo bar';
+});
 ```
 
 ## Full Example
@@ -86,17 +86,17 @@ so, the persisted string value of `foo` is illegal, and should be ignored, and
 then, we can use `@version` to mark the `foo` field to new version to omit it:
 
 ```ts
-import { version } from 'mobx-sync'
-import { observable } from 'mobx'
+import { version } from 'mobx-sync';
+import { observable } from 'mobx';
 
 class Store {
   @version(1)
   @observable
-  foo = 1
-  
+  foo = 1;
+
   @date
   @observable
-  date = new Date()
+  date = new Date();
 }
 
 // ...
@@ -115,22 +115,22 @@ you couldn't know the version of persisted in client.**
 class will be ignored if its verson is different. For example:
 
 ```ts
-import { version } from 'mobx-sync'
-import { observable } from 'mobx'
+import { version } from 'mobx-sync';
+import { observable } from 'mobx';
 
 @version(1)
 class C1 {
-  p1 = 1
+  p1 = 1;
 }
 
 class C2 {
-  p2 = 2
+  p2 = 2;
 }
 
 class Store {
-  c1 = new C1
-  c2 = new C2
-  c1_1 = new C1
+  c1 = new C1();
+  c2 = new C2();
+  c1_1 = new C1();
 }
 ```
 
@@ -160,17 +160,17 @@ For example: if we want to skip the `date` field in Quick Start, we just need to
 use `@ignore` to decorate it:
 
 ```ts
-import { date, ignore } from 'mobx-sync'
-import { observable } from 'mobx'
+import { date, ignore } from 'mobx-sync';
+import { observable } from 'mobx';
 
 class Store {
   @observable
-  foo = 'bar'
-  
+  foo = 'bar';
+
   @ignore
   @date
   @observable
-  date = new Date()
+  date = new Date();
 }
 ```
 
@@ -188,7 +188,7 @@ namespace ignore {
    * works in both web and ssr environment
    */
   function ssr(target: any, key: string): void;
-  
+
   /**
    * works in ssr environment only
    */
@@ -205,15 +205,15 @@ Sometimes, your store node is not pure ojbect, just like `Set`, `Map`,
 For example, we use `Set<Date>` as a field:
 
 ```ts
-import { format } from 'mobx-sync'
-import { observable } from 'mobx'
+import { format } from 'mobx-sync';
+import { observable } from 'mobx';
 
 class Store {
   @format(
     (data: string[]) => new Set(data.map((d) => new Date(d))),
     (value: Set<Date>) => Array.from(value, (v) => v.toISOString()),
   )
-  allowDates = new Set<Date>()
+  allowDates = new Set<Date>();
 }
 ```
 
@@ -248,7 +248,7 @@ Signature:
  * @param serializer - the function to serialize the object to pure js
  *      object or any else could be stringify safely by `JSON.stringify`.
  */
-function format<I, O = I> (
+function format<I, O = I>(
   deserializer: (persistedValue: O, currentValue: I) => I,
   serializer?: (value: I) => O,
 ): PropertyDecorator;
@@ -278,7 +278,7 @@ import { observable } from 'mobx'
 
 export Store {
   @observable userId = 0
-  
+
   @ignore.ssr
   users = observable.map()
 }
@@ -286,36 +286,39 @@ export Store {
 
 ```ts
 // server.ts
-import { config } from 'mobx-sync'
+import { config } from 'mobx-sync';
 
-config({ ssr: true })
+config({ ssr: true });
 
-import { Store } from './store'
+import { Store } from './store';
 
 app.get('/', (_, res) => {
-  const store = new Store()
-  
+  const store = new Store();
+
   res.end(`<!DOCTYPE html>
   <html>
   <body>
-  <div id=root>${renderToString(<App store={store}/>)}</div>
-  <script>var __INITIAL_STATE__ = ${JSON.stringify(store).replace(/</g, '\\u003c')}</script>
+  <div id=root>${renderToString(<App store={store} />)}</div>
+  <script>var __INITIAL_STATE__ = ${JSON.stringify(store).replace(
+    /</g,
+    '\\u003c',
+  )}</script>
   </body>
-  </html>`)
-})
+  </html>`);
+});
 ```
 
 ```ts
 // client.ts
-import { AsyncTrunk } from 'mobx-sync'
-import { Store } from './store'
+import { AsyncTrunk } from 'mobx-sync';
+import { Store } from './store';
 
-const store = new Store()
-const trunk = new AsyncTrunk(store)
+const store = new Store();
+const trunk = new AsyncTrunk(store);
 
 trunk.init(__INITIAL_STATE__).then(() => {
-  ReactDOM.render(<App store={store}/>, document.querySelector('#root'))
-})
+  ReactDOM.render(<App store={store} />, document.querySelector('#root'));
+});
 ```
 
 **NOTE: if you do not want to use a trunk to persist/load state from
@@ -326,14 +329,14 @@ For example:
 
 ```ts
 // client.ts
-import { parseStore } from 'mobx-sync'
-import { Store } from './store'
+import { parseStore } from 'mobx-sync';
+import { Store } from './store';
 
-const store = new Store()
+const store = new Store();
 
-parseStore(store, __INITIAL_STATE__, true)
+parseStore(store, __INITIAL_STATE__, true);
 
-ReactDOM.render(<App/>, document.querySelector('#root'))
+ReactDOM.render(<App />, document.querySelector('#root'));
 ```
 
 Signature:
@@ -390,6 +393,12 @@ export interface SyncTrunkOptions {
    * the delay time, default is 0
    */
   delay?: number;
+
+  /**
+   * error callback
+   * @param error
+   */
+  onError?: (error: any) => void;
 }
 
 /**
@@ -411,6 +420,12 @@ export interface AsyncTrunkOptions {
    * default is 0
    */
   delay?: number;
+
+  /**
+   * error callback
+   * @param error
+   */
+  onError?: (error: any) => void;
 }
 
 class AsyncTrunk {

@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
     "target": "es5",
-    // this should not be changed, for atl will use it
     "module": "esnext",
     "lib": ["es2018", "dom"],
     "allowJs": false,
@@ -37,7 +36,10 @@
     "pretty": true,
     "allowUnreachableCode": false,
     "stripInternal": true,
-    "allowUnusedLabels": false
+    "allowUnusedLabels": false,
+    "incremental": true,
+    "tsBuildInfoFile": ".cache/ts.json",
+    "allowUmdGlobalAccess": false
   },
   "include": ["./src/**/*.d.ts", "./src/**/*.ts", "./src/**/*.tsx"]
 }
