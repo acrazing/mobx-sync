@@ -31,7 +31,7 @@ import { KeyFormat, KeyIgnores, KeyNodeVersion, KeyVersions } from './keys';
  * @param serializer - the function to serialize the object to pure js
  *      object or any else could be stringify safely by `JSON.stringify`.
  */
-export function format<I, O = I> (
+export function format<I, O = I>(
   deserializer: (persistedValue: O, currentValue: I) => I,
   serializer?: (value: I) => O,
 ): PropertyDecorator {
@@ -66,7 +66,7 @@ export const regexp = format<RegExp, RegExpStore>(
   (value) => ({ flags: value.flags, source: value.source }),
 );
 
-function _ignore (target: any, propertyKey: string) {
+function _ignore(target: any, propertyKey: string) {
   inject(target, KeyIgnores);
   target[KeyIgnores][propertyKey] = true;
 }
@@ -88,7 +88,7 @@ function _ignore (target: any, propertyKey: string) {
  * @param target
  * @param propertyKey
  */
-export function ignore (target: any, propertyKey: string) {
+function ignore(target: any, propertyKey: string) {
   if (options.ssr) {
     return;
   }
@@ -104,6 +104,8 @@ ignore.ssrOnly = (target: any, propertyKey: string) => {
     _ignore(target, propertyKey);
   }
 };
+
+export { ignore };
 
 /**
  * set the version of the field, if the persisted data's version does not
@@ -123,7 +125,7 @@ ignore.ssrOnly = (target: any, propertyKey: string) => {
  * @param value - the version number, this should be different from all the
  *    old version when update it, a best practice is use q increment number.
  */
-export function version (value: number | string) {
+export function version(value: number | string) {
   return (target: any, key: string = KeyNodeVersion) => {
     if (typeof target === 'function') {
       target = target.prototype;

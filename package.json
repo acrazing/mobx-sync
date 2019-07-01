@@ -1,6 +1,6 @@
 {
   "name": "mobx-sync",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "A library to persist your mobx stores.",
   "author": "acrazing <joking.young@gmail.com>",
   "main": "lib/index.js",
@@ -37,19 +37,19 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@types/jest": "^24.0.13",
-    "husky": "^2.4.0",
+    "@types/jest": "^24.0.15",
+    "husky": "^2.7.0",
     "jest": "^24.8.0",
-    "lint-staged": "^8.2.0",
+    "lint-staged": "^8.2.1",
     "mobx": "^5.10.1",
     "npm-run-all": "^4.1.5",
     "prettier": "^1.18.2",
     "ts-jest": "^24.0.2",
-    "typescript": "^3.5.1"
+    "typescript": "^3.5.2"
   },
   "dependencies": {
     "monofile-utilities": "^4.5.0",
-    "tslib": "^1.9.3"
+    "tslib": "^1.10.0"
   },
   "peerDependencies": {
     "mobx": "*"
