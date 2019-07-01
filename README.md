@@ -85,7 +85,7 @@ and then we want to change the type of `Store#foo` from `string` to `number`,
 so, the persisted string value of `foo` is illegal, and should be ignored, and
 then, we can use `@version` to mark the `foo` field to new version to omit it:
 
-```ts
+```typescript jsx
 import { version } from 'mobx-sync';
 import { observable } from 'mobx';
 
@@ -114,7 +114,7 @@ you couldn't know the version of persisted in client.**
 `@version` supports decorate class also, that means if any instance of the
 class will be ignored if its verson is different. For example:
 
-```ts
+```typescript jsx
 import { version } from 'mobx-sync';
 import { observable } from 'mobx';
 
@@ -145,7 +145,7 @@ grammar, if not, you may need to use a custom formatter(see
 
 Signature:
 
-```ts
+```typescript jsx
 function version(id: number): PropertyDecorator & ClassDecorator;
 ```
 
@@ -159,7 +159,7 @@ init, and its change will not trigger the persist action.
 For example: if we want to skip the `date` field in Quick Start, we just need to
 use `@ignore` to decorate it:
 
-```ts
+```typescript jsx
 import { date, ignore } from 'mobx-sync';
 import { observable } from 'mobx';
 
@@ -178,7 +178,7 @@ class Store {
 
 Signature:
 
-```ts
+```typescript jsx
 /**
  * works in web environment only
  */
@@ -204,7 +204,7 @@ Sometimes, your store node is not pure ojbect, just like `Set`, `Map`,
 
 For example, we use `Set<Date>` as a field:
 
-```ts
+```typescript jsx
 import { format } from 'mobx-sync';
 import { observable } from 'mobx';
 
@@ -224,7 +224,7 @@ Built-in formatters:
 
 Signature:
 
-```ts
+```typescript jsx
 /**
  * define a custom stringify/parse function for a field, it is useful for
  * builtin objects, just like Date, TypedArray, etc.
@@ -271,7 +271,7 @@ your store.
 
 For example:
 
-```ts
+```typescript jsx
 // store.ts
 import { ignore } from 'mobx-sync'
 import { observable } from 'mobx'
@@ -284,7 +284,7 @@ export Store {
 }
 ```
 
-```ts
+```typescript jsx
 // server.ts
 import { config } from 'mobx-sync';
 
@@ -308,7 +308,7 @@ app.get('/', (_, res) => {
 });
 ```
 
-```ts
+```typescript jsx
 // client.ts
 import { AsyncTrunk } from 'mobx-sync';
 import { Store } from './store';
@@ -327,7 +327,7 @@ localStorage, just want to use mobx-sync to load SSR state, you can use
 
 For example:
 
-```ts
+```typescript jsx
 // client.ts
 import { parseStore } from 'mobx-sync';
 import { Store } from './store';
@@ -341,7 +341,7 @@ ReactDOM.render(<App />, document.querySelector('#root'));
 
 Signature:
 
-```ts
+```typescript jsx
 interface Options {
   ssr: boolean;
 }
@@ -361,7 +361,7 @@ asynchronously and `SyncTrunk` runs synchronously.
 
 Signature:
 
-```ts
+```typescript jsx
 // this is a subset of `Storage`
 interface SyncStorage {
   getItem(key: string): string | null;
