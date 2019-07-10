@@ -164,5 +164,8 @@ describe('async trunk', () => {
     assert.deepStrictEqual(JSON.parse(storage.getItem('key')!), {
       list: [{ a: '1', b: '2' }, { a: '3', b: '4' }],
     });
+    store.list = [];
+    await sleep(100);
+    assert.strictEqual(storage.getItem('key'), '{"list":[]}');
   });
 });
