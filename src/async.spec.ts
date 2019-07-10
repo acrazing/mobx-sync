@@ -149,4 +149,20 @@ describe('async trunk', () => {
       node: { hello: 'John 2' },
     });
   });
+
+  it('should persist array', async () => {
+    class Node {
+      @observable list = [{ a: '1', b: '2' }];
+    }
+
+    const store = new Node();
+    const storage = new MemoryStorage(true);
+    const trunk = new AsyncTrunk(store, { storage, storageKey: 'key' });
+    await trunk.init();
+    store.list.push({ a: '3', b: '4' });
+    await sleep(100);
+    assert.deepStrictEqual(JSON.parse(storage.getItem('key')!), {
+      list: [{ a: '1', b: '2' }, { a: '3', b: '4' }],
+    });
+  });
 });
