@@ -433,7 +433,7 @@ class AsyncTrunk {
   constructor(store: any, options?: AsyncTrunkOptions);
   init(initialState?: any): Promise<void>;
   // call persist manually
-  presist(): Promise<void>;
+  persist(): Promise<void>;
   // clear persisted state in storage
   clear(): Promise<void>;
   // change the store instance
@@ -445,7 +445,7 @@ class SyncTrunk {
   constructor(store: any, options?: SyncTrunkOptions);
   init(initialState?: any): void;
   // call persist manually
-  presist(): void;
+  persist(): void;
   // clear persisted state in storage
   clear(): void;
   // change the store instance
