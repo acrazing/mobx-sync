@@ -198,7 +198,7 @@ namespace ignore {
 
 ### custom formatter
 
-Sometimes, your store node is not pure ojbect, just like `Set`, `Map`,
+Sometimes, your store node is not pure object, just like `Set`, `Map`,
 `observable.map<number, Date>`, etc, you may need to use custom formatter
 (`@format`) to parse/stringify the data/value.
 
@@ -213,6 +213,7 @@ class Store {
     (data: string[]) => new Set(data.map((d) => new Date(d))),
     (value: Set<Date>) => Array.from(value, (v) => v.toISOString()),
   )
+  @observable
   allowDates = new Set<Date>();
 }
 ```
