@@ -1,4 +1,6 @@
 # mobx-sync
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Facrazing%2Fmobx-sync.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Facrazing%2Fmobx-sync?ref=badge_shield)
+
 
 A library use JSON to persist your mobx stores with version control.
 
@@ -479,3 +481,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
+
+
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Facrazing%2Fmobx-sync.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Facrazing%2Fmobx-sync?ref=badge_large)
