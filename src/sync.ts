@@ -8,7 +8,7 @@
  * @desc sync.ts
  */
 
-import { autorun, IReactionDisposer } from 'mobx';
+import { autorun, IReactionDisposer, toJS } from 'mobx';
 import { noop } from 'monofile-utilities/lib/consts';
 import { KeyActionName, KeyDefaultKey } from './keys';
 import { parseStore } from './parse-store';
@@ -70,7 +70,7 @@ export class SyncTrunk {
 
   persist() {
     try {
-      this.storage.setItem(this.storageKey, JSON.stringify(this.store));
+      this.storage.setItem(this.storageKey, JSON.stringify(toJS(this.store)));
     } catch (error) {
       this.onError(error);
     }
