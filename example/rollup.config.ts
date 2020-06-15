@@ -10,12 +10,12 @@ import typescript from 'rollup-plugin-typescript2';
 import pkg from './package.json';
 
 export default {
-  input: 'src/index.ts',
+  input: 'src/index.tsx',
   output: [
     { file: pkg.main, format: 'cjs', sourcemap: true },
     { file: pkg.module, format: 'es', sourcemap: true },
   ],
-  external: Object.keys({ ...pkg.dependencies, ...pkg.peerDependencies }),
+  external: Object.keys(pkg.dependencies).filter((v) => v !== 'mobx-sync'),
   plugins: [
     typescript(),
     commonjs(),

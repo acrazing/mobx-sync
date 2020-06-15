@@ -3,12 +3,12 @@
  * @since 2018-09-08 10:46:07
  */
 
+import localforage from 'localforage';
+import { AsyncTrunk } from 'mobx-sync';
 import * as React from 'react';
 import { render } from 'react-dom';
-import { AsyncTrunk } from '../src';
 import { App } from './App';
 import { store } from './store';
-import localforage = require('localforage');
 
 /**
  * the initial state injected by SSR
@@ -49,4 +49,4 @@ trunk.init(__INITIAL_STATE__).then(() => {
   store.storeLoaded = true;
 });
 
-render(<App/>, document.getElementById('root'));
+render(<App />, document.getElementById('root'));

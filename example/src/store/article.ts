@@ -4,8 +4,7 @@
  */
 
 import { observable } from 'mobx';
-import { ANY } from 'monofile-utilities';
-import { date, ignore, version } from '../../src';
+import { date, ignore, version } from 'mobx-sync';
 import { UserStore } from './user';
 
 export class ArticleStore {
@@ -18,7 +17,8 @@ export class ArticleStore {
    * @type {string}
    */
   @ignore
-  @observable content = '';
+  @observable
+  content = '';
 
   /**
    * @desc custom formatter: the date field should be persisted
@@ -31,7 +31,8 @@ export class ArticleStore {
    * @type {Date}
    */
   @date
-  @observable createdAt: Date = ANY;
+  @observable
+  createdAt: Date = new Date();
 
   /**
    * @desc version control, you can specify a version for a node
@@ -40,7 +41,8 @@ export class ArticleStore {
    * @type {UserStore}
    */
   @version(1)
-  @observable author = new UserStore();
+  @observable
+  author = new UserStore();
 }
 
 export const article = new ArticleStore();

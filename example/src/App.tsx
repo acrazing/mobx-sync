@@ -9,14 +9,10 @@ import { store } from './store';
 
 @observer
 export class App extends React.Component {
-  render () {
+  render() {
     return (
       <div>
-        {
-          store.storeLoaded
-            ? 'Persisted store is loaded'
-            : 'Loading stores...'
-        }
+        {store.storeLoaded ? 'Persisted store is loaded' : 'Loading stores...'}
       </div>
     );
   }

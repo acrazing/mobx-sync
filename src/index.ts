@@ -13,7 +13,6 @@ export * from './config';
 export * from './decorators';
 export * from './inject';
 export * from './keys';
-export * from './memory-storage';
 export * from './parse-store';
 export * from './sync';
 export * from './utils';

@@ -3,9 +3,9 @@
  * @since 2018-09-08 11:08:05
  */
 
-import { ignore } from '../../src';
-import { article } from './article';
+import { ignore } from 'mobx-sync';
 import { user } from './user';
+import { article } from './article';
 
 export class RootStore {
   /**

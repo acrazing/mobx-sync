@@ -4,7 +4,7 @@
  */
 
 import { observable } from 'mobx';
-import { version } from '../../src';
+import { version } from 'mobx-sync';
 
 /**
  * @desc the version control for a node, if the instance of the node
