@@ -8,10 +8,12 @@
  * @desc index.ts
  */
 
-export { AsyncStorage, AsyncTrunk, AsyncTrunkOptions } from './async';
-export {
-  format, date, regexp, ignore, RegExpStore, version,
-} from './decorators';
-export { parseStore } from './parse-store';
-export { SyncStorage, SyncTrunk, SyncTrunkOptions } from './sync';
-export { config } from './config';
+export * from './async';
+export * from './config';
+export * from './decorators';
+export * from './inject';
+export * from './keys';
+export * from './memory-storage';
+export * from './parse-store';
+export * from './sync';
+export * from './utils';

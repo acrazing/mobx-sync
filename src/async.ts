@@ -8,7 +8,7 @@
  * @desc async.ts
  */
 
-import { autorun, IReactionDisposer, toJS } from 'mobx';
+import { autorun, IReactionDisposer } from 'mobx';
 import { noop } from 'monofile-utilities/lib/consts';
 import { KeyActionName, KeyDefaultKey } from './keys';
 import { parseStore } from './parse-store';
@@ -76,10 +76,7 @@ export class AsyncTrunk {
 
   async persist() {
     try {
-      await this.storage.setItem(
-        this.storageKey,
-        JSON.stringify(toJS(this.store)),
-      );
+      await this.storage.setItem(this.storageKey, JSON.stringify(this.store));
     } catch (reason) {
       this.onError(reason);
     }
