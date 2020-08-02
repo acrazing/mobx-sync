@@ -1,16 +1,16 @@
 # mobx-sync
+
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Facrazing%2Fmobx-sync.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Facrazing%2Fmobx-sync?ref=badge_shield)
 
-
-A library use JSON to persist your mobx stores with version control.
+A library use JSON to persist your MobX stores with version control.
 
 ## Features
 
 - use `JSON.stringify/JSON.parse` as the deserialize/serialize method
-- version control by use `@version` decorator
-- ignore any store node by use `@ignore` decorator
+- version control by using `@version` decorator
+- ignore any store node by using `@ignore` decorator
 - support React Native
-- support server side render (SSR)
+- support server side rendering (SSR)
 
 ## Install
 
@@ -40,20 +40,20 @@ class Store {
 const store = new Store();
 
 // create a mobx-sync instance, it will:
-// 1. load your state from localStorage & ssr renderred state
+// 1. load your state from localStorage & ssr rendered state
 // 2. persist your store to localStorage automatically
 // NOTE: you do not need to call `trunk.updateStore` to persist
 // your store, it is persisted automatically!
 const trunk = new AsyncTrunk(store, { storage: localStorage });
 
-// init the state and auto persist watcher(use mobx's autorun)
+// init the state and auto persist watcher(use MobX's autorun)
 // NOTE: it will load the persisted state first(and must), and
 // then load the state from ssr, if you pass it as the first
 // argument of `init`, just like trunk.init(__INITIAL_STATE__)
 trunk.init().then(() => {
   // you can do any staff now, just like:
 
-  // 1. render app with inited state:
+  // 1. render app with initial state:
   ReactDOM.render(<App store={store} />);
 
   // 2. update store, the update of the store will be persisted
@@ -75,17 +75,17 @@ You can see it at [example](example/index.tsx)
 - [sync trunk](#sync-trunk)
 - [ssr](#ssr)
 
-### verson control
+### version control
 
-Sometimes, if your store's data structure is changed, which means
+Sometimes, if your store's data structure has been changed, which means
 the persisted data is illegal to use, you can use `@version` decorator
-to mark the store node's `version`, if the persisted data's version is
-different with the declared node's verson, it will be ignored.
+to mark the store node with a `version`, if the persisted version is different
+from the declared node's version, the persisted version will be ignored.
 
-For example, we published an application like it in [Quick Start](#quick-start),
-and then we want to change the type of `Store#foo` from `string` to `number`,
-so, the persisted string value of `foo` is illegal, and should be ignored, and
-then, we can use `@version` to mark the `foo` field to new version to omit it:
+For example, we publish an application like the [Quick Start](#quick-start) at first,
+and then we want to change the type of `Store#foo` from `string` to `number`.
+The persisted string value of `foo` thus become illegal, and should be ignored.
+It is necessary to use `@version` to mark the `foo` field with a new version to omit it:
 
 ```typescript jsx
 import { version } from 'mobx-sync';
@@ -104,17 +104,18 @@ class Store {
 // ...
 ```
 
-If you run the new verson of the application, it will omit the persisted
-value of `foo`, and keep the value of `date`, so, after call `trunk.init()`,
-the `foo` will be `1`, and `date` will be previous verson's value.
+When application with the new version is executed, the persisted
+value of `foo` will be ignored, while `date` keeps the persisted value.
+It means, after calling `trunk.init()`,the `foo` becomes `1`,
+and `date` still stores the previous value.
 
-**NOTE: if the new verson is strictly different with the persisted version,
+**NOTE: if the new version is strictly different with the persisted version,
 it will be ignored, or else it will be loaded as normal, so if you use it,
 we recommend you use an progressive increasing integer to mark it, because
 you couldn't know the version of persisted in client.**
 
-`@version` supports decorate class also, that means if any instance of the
-class will be ignored if its verson is different. For example:
+`@version` also supports class decorator, that means any instance of the
+class will be ignored if its version is different. For example:
 
 ```typescript jsx
 import { version } from 'mobx-sync';
@@ -136,8 +137,8 @@ class Store {
 }
 ```
 
-If the persisted version of store's `c1` && `c1_1` has different verson with
-`1`, it will be ignored.
+If the persisted version of store's `c1` && `c1_1` has different version with
+`1`, they will be ignored.
 
 **NOTE: if you use a non-pure object as the store field, you must initialize it
 before you call `trunk.init`, just like `custom store class`(`C1`, `C2` upon),
@@ -153,12 +154,12 @@ function version(id: number): PropertyDecorator & ClassDecorator;
 
 ### ignore control
 
-If you hope some fields of your store is ignored to persist, just like the artile
-with big size of detailed content. you can use `@ignore` decorator to mark it as
-ignored, it will not be loaded (even if it is persisted in previous version) when
-init, and its change will not trigger the persist action.
+If you hope some fields of your store to skip persisting, just like an article
+with big size of detailed content. you can use `@ignore` decorator to mark it,
+those fields will not be loaded (even if it is persisted in previous version) in the initial,
+and also the subsequent change will not trigger the action of persisting.
 
-For example: if we want to skip the `date` field in Quick Start, we just need to
+For example: if we want to ignore the `date` field in Quick Start, we just need to
 use `@ignore` to decorate it:
 
 ```typescript jsx
@@ -176,7 +177,7 @@ class Store {
 }
 ```
 
-`@ignore` only supports decorate property.
+`@ignore` only supports decorating property.
 
 Signature:
 
@@ -200,7 +201,7 @@ namespace ignore {
 
 ### custom formatter
 
-Sometimes, your store node is not pure object, just like `Set`, `Map`,
+Sometimes, your store node is not a pure object, just like `Set`, `Map`,
 `observable.map<number, Date>`, etc, you may need to use custom formatter
 (`@format`) to parse/stringify the data/value.
 
@@ -236,7 +237,7 @@ Signature:
  *
  * // this example shows how to format a date to timestamp,
  * // and load it from serialized string,
- * // if the date is invalid, will not persist it.
+ * // if the date is invalid, it will not be persisted.
  * class SomeStore {
  *   @format<Date, number>(
  *      (timestamp) => new Date(timestamp),
@@ -263,7 +264,7 @@ function regexp(target: any, key: string): void;
 
 ### SSR
 
-Sometimes, we hope to use mobx in SSR(Server-Side Rendering), there is no
+Sometimes, we hope to use MobX in SSR(Server-Side Rendering), there is no
 standard way to stringify/load mobx store to/from html template, mobx-sync
 maybe one.
 
@@ -458,7 +459,7 @@ class SyncTrunk {
 
 ## License
 
-```
+```markdown
 The MIT License (MIT)
 
 Copyright (c) 2016 acrazing
@@ -481,6 +482,5 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
-
 
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Facrazing%2Fmobx-sync.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Facrazing%2Fmobx-sync?ref=badge_large)
