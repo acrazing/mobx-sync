@@ -48,6 +48,14 @@ export interface AsyncTrunkOptions {
    * @param error
    */
   onError?: (error: any) => void;
+
+  /**
+   * If the values of non-ignored properties before the trunk.init() should be
+   * volatilly saved so they can be later `reset()`ed.
+   *
+   * Defaults to `false`.
+   */
+  saveDefaultValues?: boolean;
 }
 
 export class AsyncTrunk {
@@ -58,6 +66,9 @@ export class AsyncTrunk {
   readonly delay: number;
   readonly onError: (error: any) => void;
 
+  readonly saveDefaultValues: boolean;
+  private defaultValues: any;
+
   constructor(
     store: any,
     {
@@ -65,6 +76,7 @@ export class AsyncTrunk {
       storageKey = KeyDefaultKey,
       delay = 0,
       onError = noop,
+      saveDefaultValues = false,
     }: AsyncTrunkOptions = {},
   ) {
     this.store = store;
@@ -72,6 +84,7 @@ export class AsyncTrunk {
     this.storageKey = storageKey;
     this.delay = delay;
     this.onError = onError;
+    this.saveDefaultValues = saveDefaultValues;
   }
 
   async persist() {
@@ -104,8 +117,32 @@ export class AsyncTrunk {
       delay: this.delay,
       onError: this.onError,
     });
+    // Save default values
+    if (this.saveDefaultValues)
+      parseStore(this.store, initialState, false, this.defaultValues);
   }
 
+  /**
+   * It will reset the store properties to their default values and also save on storage.
+   *
+   * You must have set the `saveDefaultValues` parameter in this trunk constructor.
+   */
+  async reset() {
+    if (!this.saveDefaultValues) {
+      this.onError(
+        "mobx-sync reset() was called but saveDefaultValues parameter wasn't set on the trunk constructor.",
+      );
+      return;
+    }
+
+    parseStore(
+      this.store,
+      JSON.parse(JSON.stringify(this.defaultValues)),
+      false,
+    );
+    return this.persist();
+  }
+  /** Erases the data from the storage. */
   async clear() {
     return this.storage.removeItem(this.storageKey);
   }
