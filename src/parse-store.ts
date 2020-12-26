@@ -12,7 +12,13 @@ import { action, isObservableArray, isObservableMap, observable } from 'mobx';
 import { KeyFormat, KeyNodeVersion, KeyVersions } from './keys';
 import { isPrimitive } from './utils';
 
-let parseStore = (store: any, data: any, isFromServer: boolean) => {
+/** Target allows saving the current data elsewhere than the store itself */
+let parseStore = (
+  store: any,
+  data: any,
+  isFromServer: boolean,
+  target: any = store,
+) => {
   // if store or data is empty, break it
   if (!store || !data) {
     return;
@@ -21,10 +27,8 @@ let parseStore = (store: any, data: any, isFromServer: boolean) => {
   const storeVersions = store[KeyVersions] || {};
   const deserializers = store[KeyFormat] || {};
   // version control for node
-  if ((KeyNodeVersion in dataVersions)
-    || (KeyNodeVersion in storeVersions)) {
-    if (dataVersions[KeyNodeVersion]
-      !== storeVersions[KeyNodeVersion]) {
+  if (KeyNodeVersion in dataVersions || KeyNodeVersion in storeVersions) {
+    if (dataVersions[KeyNodeVersion] !== storeVersions[KeyNodeVersion]) {
       return;
     }
   }
@@ -52,27 +56,22 @@ let parseStore = (store: any, data: any, isFromServer: boolean) => {
       const storeValue = store[key];
       const dataValue = data[key];
       if (deserializers[key] && deserializers[key].deserializer) {
-        store[key] = deserializers[key].deserializer(dataValue, storeValue);
-      }
-      else if (isObservableArray(storeValue)) {
+        target[key] = deserializers[key].deserializer(dataValue, storeValue);
+      } else if (isObservableArray(storeValue)) {
         // mobx array
-        store[key] = observable.array(dataValue);
-      }
-      else if (isObservableMap(storeValue)) {
+        target[key] = observable.array(dataValue);
+      } else if (isObservableMap(storeValue)) {
         // mobx map
-        store[key] = observable.map(dataValue);
-      }
-      else if (isPrimitive(dataValue)) {
+        target[key] = observable.map(dataValue);
+      } else if (isPrimitive(dataValue)) {
         // js/mobx primitive objects
-        store[key] = dataValue;
-      }
-      else if (!storeValue) {
+        target[key] = dataValue;
+      } else if (!storeValue) {
         // if store value is empty, assign persisted data to it directly
-        store[key] = dataValue;
-      }
-      else {
+        target[key] = dataValue;
+      } else {
         // nested pure js object or mobx observable object
-        parseStore(storeValue, dataValue, isFromServer);
+        parseStore(storeValue, dataValue, isFromServer, target[key]);
       }
     }
   }
